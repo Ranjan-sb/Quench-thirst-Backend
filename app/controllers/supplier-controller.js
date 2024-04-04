@@ -39,6 +39,20 @@ supplierController.create = async(req,res)=>{
     }
 }
 
+supplierController.remove = async (req, res) => {
+    try {
+        const {id} = req.params
+        const supplier = await Supplier.findByIdAndDelete(id)
+        if (!supplier) {
+            return res.status(404).json({ error: 'record not found' })
+        }
+        res.json(supplier)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     supplierController
 }

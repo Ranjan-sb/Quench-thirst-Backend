@@ -242,7 +242,8 @@ usersController.approveSupplier = async(req,res)=>{
 //to delete the particular user
 usersController.remove = async (req, res) => {
     try {
-        const user = await User.findByIdAndDelete(req.user.id)
+        const id = req.params.id
+        const user = await User.findByIdAndDelete(id)
         if (!user) {
             return res.status(404).json({ error: 'record not found' })
         }

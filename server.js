@@ -17,6 +17,8 @@ const {usersController} = require('./app/controllers/users-controller')
 const {authenticateUser,authorizeUser} = require('./app/middlewares/auth')
 const { supplierController } = require('./app/controllers/supplier-controller')
 
+const vehicleTypeController = require('./app/controllers/vehicleType-controller')
+
 //route to create/register user
 app.post('/api/users/register',checkSchema(userRegisterSchema),usersController.register)
 
@@ -36,7 +38,7 @@ app.post('/api/users/login',checkSchema(loginValidationSchema),usersController.l
 //app.put('/api/users', authenticateUser , usersController.update)
 
 //route to delete user
-app.delete('/api/users', authenticateUser, usersController.remove)
+app.delete('/api/users/:id', authenticateUser, usersController.remove)
 
 
 //route to see particular user or account
@@ -53,10 +55,34 @@ app.put('/api/users/:id/approve',authenticateUser,authorizeUser(['admin']),users
 
 //route to create supplier
 app.post('/api/suppliers',authenticateUser,supplierController.create)
+
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
+
 // route to get particular supplier
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)
+
+//route to delete supplier
+app.delete('/api/suppliers',authenticateUser,supplierController.remove)
+
+//vehicle type module ------------------------------------------------------------------------->
+
+//route to list all vehicleType
+app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.list)
+
+//route to list particular vehicleType
+app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.particularType)
+
+//route to create vehicleType
+app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),vehicleTypeController.create)
+
+//route to update vehicleType
+app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.update)
+
+//route to delete vehicleType
+app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.remove)
+
+//------------------------------------------------------------------------------------------------------------------>
 
 
 // // Route to handle OTP generation and sending
