@@ -3,17 +3,18 @@ const {model,Schema} = require('mongoose')
 const userSchema = new Schema({
     username : String,
     email : String,
-    mobileNumber : Number,
+    password : String,
+    mobileNumber : String,
     role : String,
+    otp : String,
     isApproved:{
         type:Boolean,
         default:false
     },
-    // otp : {
-    //     type : Number,
-    //     required : true
-    // },
-
+    isVerified:{
+        type:Boolean, 
+        default:false
+    }
 },{ timestamps : true })
 
 const User = model('User',userSchema)

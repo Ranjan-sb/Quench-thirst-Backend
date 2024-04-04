@@ -14,8 +14,7 @@ supplierController.list = async (req,res)=>{
 
 supplierController.account = async (req,res)=>{
     try {
-        //dont forget to change to (req.user.id)
-        const supplier = await Supplier.findById("660d388f5884aa28da759204").populate('userId',['username','email','mobileNumber'])//(req.user.id)//.select({password:0})
+        const supplier = await Supplier.findOne({userId:req.user.id})//.populate('userId',['username','email','mobileNumber']).select({password:0})
         res.json(supplier)
     } catch(err){
         console.log(err)
@@ -31,7 +30,7 @@ supplierController.create = async(req,res)=>{
     const {body}=req
     try{
         const supplier = new Supplier(body)
-        supplier.userId = "660d237e44033ada93ab39fa"
+        supplier.userId = req.user.id
         await supplier.save()
         res.status(201).json(supplier)
     } catch (err){

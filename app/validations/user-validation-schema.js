@@ -54,6 +54,134 @@ const userRegisterSchema = {
     }
 }
 
+const verifyEmailAndOtpValidationSchema = {
+    email: {
+        exists: {
+            errorMessage: 'email field is required'
+        },
+        notEmpty: {
+            errorMessage: 'email field must have some value'
+        },
+        trim: true,
+        normalizeEmail: true,
+        isEmail: {
+            errorMessage: 'email value must be in valid email format'
+        }
+    },
+    otp: {
+        exists: {
+            errorMessage: 'otp field is required'
+        },
+        notEmpty: {
+            errorMessage: 'otp field must have some value'
+        },
+        trim: true,
+        isLength: {
+            options: { min: 6, max: 6 },
+            errorMessage: 'otp field value must be of 6 digits'
+        },
+        isNumeric: {
+            errorMessage: 'otp value must be numbers only'
+        }
+    }
+}
+
+//for forgot password 
+const forgotPasswordValidation = {
+    email:{
+        exists: {
+            errorMessage: 'email field is required'
+        },
+        notEmpty: {
+            errorMessage: 'email field must have some value'
+        },
+        trim: true,
+        normalizeEmail: true,
+        isEmail: {
+            errorMessage: 'email value must be in valid email format'
+        }
+    },
+    otp: {
+        exists: {
+            errorMessage: 'otp field is required'
+        },
+        notEmpty: {
+            errorMessage: 'otp field must have some value'
+        },
+        trim: true,
+        isLength: {
+            options: { min: 6, max: 6 },
+            errorMessage: 'otp field value must be of 6 digits'
+        },
+        isNumeric: {
+            errorMessage: 'otp value must be numbers only'
+        }
+    },
+    password: {
+        exists: {
+            errorMessage: 'password field is required'
+        },
+        notEmpty: {
+            errorMessage: 'password field must have some value'
+        },
+        isLength: {
+            options: { min: 8, max: 128 },
+            errorMessage: 'password field value must be between 8-128 characters'
+        },
+        isStrongPassword: {
+            errorMessage: 'password must have at least one uppercase, one number and one special character'
+        }
+    }
+}
+
+//for resending otp
+const resendOTPEmailValidationSchema = {
+    email: {
+        exists: {
+            errorMessage: 'email field is required'
+        },
+        notEmpty: {
+            errorMessage: 'email field must have some value'
+        },
+        trim: true,
+        normalizeEmail: true,
+        isEmail: {
+            errorMessage: 'email value must be in valid email format'
+        }
+    }
+}
+
+const loginValidationSchema = {
+    email: {
+        exists: {
+            errorMessage: 'email field is required'
+        },
+        notEmpty: {
+            errorMessage: 'email field must have some value'
+        },
+        trim: true,
+        normalizeEmail: true,
+        isEmail: {
+            errorMessage: 'email value must be in valid email format'
+        }
+    },
+    password: {
+        exists: {
+            errorMessage: 'password field is required'
+        },
+        notEmpty: {
+            errorMessage: 'password field must have some value'
+        },
+        isLength: {
+            options: { min: 8, max: 128 },
+            errorMessage: 'password field value must be between 8-128 characters'
+        }
+    }
+}
 module.exports = {
-    userRegisterSchema
+    userRegisterSchema,
+    verifyEmailAndOtpValidationSchema,
+    forgotPasswordValidation,
+    loginValidationSchema,
+    resendOTPEmailValidationSchema
 }
