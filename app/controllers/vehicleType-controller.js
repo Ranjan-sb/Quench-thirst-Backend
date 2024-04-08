@@ -37,9 +37,8 @@ vehicleTypeController.update = async(req,res)=>{
     try{
         const {id} = req.params
         const {body} = req
-        const vehicle = await VehicleType.findOneAndUpdate({id}, body , {new:true})
-        await vehicle.save()
-        res.status(200).json(vehicle)
+        const vehicle = await VehicleType.findOneAndUpdate({_id:id}, body , {new:true})
+        res.json(vehicle)
     } catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})

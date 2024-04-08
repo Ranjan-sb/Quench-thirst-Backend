@@ -82,78 +82,24 @@ app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),vehicleTyp
 app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.update)
 
 //route to delete vehicleType
-app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.remove)
+app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.remove)
 
 //------------------------------------------------------------------------------------------------------------------>
 
 //route to create vehicle
 app.post('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleController.create)
 
-// // Route to handle OTP generation and sending
-// const accountSid = process.env.TWILIO_ACCOUNT_SID;
-// const authToken = process.env.TWILIO_AUTH_TOKEN;
-// const twilioPhoneNumber = 'TWILIO_PHONE_NUMBER';
-// const client = require('twilio')(accountSid, authToken);
-// app.post('/api/send-otp', async(req, res) => {
+//list all vehicles of supplier
+app.get('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleController.list)
 
-//     const { mobileNumber } = req.body;
-//     try{
-//         const user = await User.findOne({mobileNumber})
-//         console.log(user)
-//         if(user){
-//             // Generate a random 6-digit OTP
-//             function generateOtp(){
-//                 const generatedOtp = Math.floor(100000 + Math.random() * 900000);
-//                 user.otp = generatedOtp
-//                 return generateOtp
-//             }
-            
-//             await user.save()
-//         }else{
-//             res.send({message:'User Not found'})
-//         }
-//     }catch(error){
-//         console.log(error)
-//     }
-    
+//route to list particular vehicle
+app.get('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),vehicleController.particularVehicle)
 
-//     // Send OTP to the provided phone number using Twilio
-//     client.messages
-//         .create({
-//             body: `Your OTP is: ${generateOtp()}`,
-//             from: twilioPhoneNumber,
-//             to: 9066901674
-//         })
-//         .then(message => {
-//             console.log('OTP sent:', message.sid);
-//             res.status(200).send({ success: true, message: 'OTP sent successfully' });
-//         })
-//         .catch(err => {
-//             console.error('Error sending OTP:', err);
-//             res.status(500).send({ success: false, message: 'Failed to send OTP' });
-//         });
-// });
+//route to update vehicle
+app.put('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier','admin']),vehicleController.update)
 
-// // Route to handle OTP verification
-// app.post('/api/verify-otp', async(req, res) => {
-//     const { mobileNumber, enteredOtp } = req.body;
-//     try{
-//         const user = await User.find({mobileNumber})
-//         if(user){
-//             // Compare OTP entered by the user with the generated OTP
-//             if (user.otp === enteredOtp) {
-//                 res.status(200).send({ success: true, message: 'OTP verification successful' });
-//             } else {
-//                 res.status(400).send({ success: false, message: 'Incorrect OTP' });
-//             }
-//         }
-//     }catch(error){
-//         console.log(error)
-//         res.status(500).json({error:"Internal Server error"})
-//     }
-// });
-
-
+//route to delete vehicleType
+app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.remove)
 
 
 app.listen(port,()=>{

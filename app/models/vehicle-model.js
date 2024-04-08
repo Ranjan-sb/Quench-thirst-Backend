@@ -12,7 +12,7 @@ const vehicleSchema=new Schema({
     type : Schema.Types.ObjectId,
     ref : 'VehicleType'
   },
-  capacity : String
+  //capacity : String
 },{timestamps:true})
 
 const Vehicle=model('Vehicle', vehicleSchema)

@@ -4,7 +4,7 @@ const {Schema, model}=mongoose
 
 const vehicleTypeSchema=new Schema({
   name : String,      
-  quantity : Number,   
+  capacity : Number,   
   prices : [
     {   
         purpose : String,
