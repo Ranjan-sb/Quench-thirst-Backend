@@ -19,6 +19,8 @@ const { supplierController } = require('./app/controllers/supplier-controller')
 
 const vehicleTypeController = require('./app/controllers/vehicleType-controller')
 
+const vehicleController = require('./app/controllers/vehicle-controller')
+
 //route to create/register user
 app.post('/api/users/register',checkSchema(userRegisterSchema),usersController.register)
 
@@ -84,6 +86,8 @@ app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehi
 
 //------------------------------------------------------------------------------------------------------------------>
 
+//route to create vehicle
+app.post('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleController.create)
 
 // // Route to handle OTP generation and sending
 // const accountSid = process.env.TWILIO_ACCOUNT_SID;

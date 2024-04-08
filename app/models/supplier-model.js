@@ -9,11 +9,11 @@ const supplierSchema=new Schema({
     ref : 'User'
   } ,
   licenseNumber : String,
-  address : String,
-  geo : {
-    lat : String, 
-    lng : String
-  },
+  // address : String,
+  // geo : {
+  //   lat : String, 
+  //   lng : String
+  // },
   bankAcc:{
     accHolderName : String,
     bank : String,

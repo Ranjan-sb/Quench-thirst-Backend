@@ -1,4 +1,6 @@
 const Supplier = require('../models/supplier-model')
+const Address = require('../models/address-model')
+const _ = require("lodash")
 const { validationResult } = require('express-validator')
 
 const supplierController = {}
@@ -27,7 +29,7 @@ supplierController.create = async(req,res)=>{
     if(!errors.isEmpty()){
         return res.status(400).json({errors:errors.array()})
     }
-    const {body}=req
+    const body = req.body
     try{
         const supplier = new Supplier(body)
         supplier.userId = req.user.id

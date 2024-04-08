@@ -3,11 +3,11 @@ const mongoose=require('mongoose')
 const {Schema, model}=mongoose
 
 const vehicleTypeSchema=new Schema({
-  name : String,
-  capacity : Number,
+  name : String,      
+  quantity : Number,   
   prices : [
-    {
-        purpose : [String],
+    {   
+        purpose : String,
         price : Number
     }
   ]

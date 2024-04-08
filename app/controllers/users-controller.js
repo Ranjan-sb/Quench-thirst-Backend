@@ -1,4 +1,5 @@
 require('dotenv').config()
+const Address = require('../models/address-model')
 const _ = require("lodash")
 const bcryptjs = require('bcryptjs')
 const otpGenerator = require('otp-generator')
@@ -6,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user-model')
 const { validationResult } = require('express-validator')
 const nodemailer = require('nodemailer')
+// const Supplier = require('../models/supplier-model')
 const usersController = {}
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID
@@ -20,7 +22,7 @@ usersController.sendSMS = async(username,mobileNumber,role)=>{
     };
     try{
         const message = await client.messages.create(msgOptions);
-        console.log(message)
+        //console.log(message)
     } catch(error){
         console.log(error)
     }
@@ -73,11 +75,13 @@ usersController.register = async (req, res) => {
     }
     try {
         const body = req.body
+        const addressBody = _.pick(req.body,['address','geo'])
         const user = new User(body)
         {
             const salt = await bcryptjs.genSalt()
             const encryptedPassword = await bcryptjs.hash(user.password, salt)
             user.password = encryptedPassword
+            
         }
         {
             const otp = generateOtp()
@@ -92,8 +96,12 @@ usersController.register = async (req, res) => {
         if (user.role.toLowerCase() === 'customer'){
             user.isApproved = true
         }
+        const address = new Address(addressBody)
+        address.userId = user._id
         await user.save()
+        await address.save()
         res.status(201).json(user)
+
         //usersController.sendConfirmMail(user.email, user.username)
     } catch (error) {
         console.log(error)
@@ -233,6 +241,7 @@ usersController.approveSupplier = async(req,res)=>{
         }
         const supplierNew = await User.findByIdAndUpdate(id,{$set :{isApproved:true}},{new:true})
         res.json(supplierNew)
+        
     } catch(error){
         console.log(err)
         res.status(500).json({error:'Internal server error'})
