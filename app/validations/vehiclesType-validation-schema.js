@@ -6,6 +6,15 @@ const vehicleTypeValidation={
       errorMessage:'vehicle name is required'
     }
   },
+  capacity:{
+    notEmpty:{
+      errorMessage:'capacity is required'
+    },
+    isIn:{
+      options:[[6000,8000,12000]],
+      errorMessage:'capacity should be 6000L or 8000L or 12000L'
+    }
+  },
   quantity:{
     notEmpty:{
       errorMessage:'quantity cannot be zero or empty'
