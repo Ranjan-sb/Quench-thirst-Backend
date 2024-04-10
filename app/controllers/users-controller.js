@@ -77,8 +77,8 @@ usersController.register = async (req, res) => {
     try {
         const body = req.body
         const addressBody = _.pick(req.body,['doorNo','locality','city','state','pinCode','country'])
-        //const searchString = `${addressBody.doorNo}%2C%20${addressBody.locality}%2C%20${addressBody.city}%2C%20${addressBody.state}%2C%20${addressBody.pinCode}%2C%20${addressBody.country}`
-        const searchString = `${addressBody.doorNo}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
+        const searchString = `${addressBody.doorNo}%2C%20${addressBody.locality}%2C%20${addressBody.city}%2C%20${addressBody.state}%2C%20${addressBody.pinCode}%2C%20${addressBody.country}`
+        //const searchString = `${addressBody.doorNo}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
         const user = new User(body)
         {
             const salt = await bcryptjs.genSalt()

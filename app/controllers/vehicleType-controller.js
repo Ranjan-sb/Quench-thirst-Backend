@@ -1,3 +1,4 @@
+const Vehicle = require('../models/vehicle-model')
 const VehicleType = require('../models/vehicleType-model')
 const { validationResult } = require('express-validator')
 
@@ -6,6 +7,7 @@ const vehicleTypeController = {}
 vehicleTypeController.list = async(req,res)=>{
     try{
         const vehicles = await VehicleType.find().sort({createdAt:-1})
+        const records = await Vehicle.find({name})
         res.json(vehicles)
     } catch(error){
         console.log(error)

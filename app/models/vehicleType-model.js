@@ -4,7 +4,7 @@ const {Schema, model}=mongoose
 
 const vehicleTypeSchema=new Schema({
   name : String,      
-  capacity : Number,   
+  quantity : Number,   
   prices : [
     {   
         purpose : String,
@@ -13,6 +13,6 @@ const vehicleTypeSchema=new Schema({
   ]
 },{timestamps:true})
 
-const VehicleType=model('VehicleType', vehicleTypeSchema)
+const VehicleType = model('VehicleType', vehicleTypeSchema)
 
-module.exports=VehicleType
+module.exports = VehicleType
