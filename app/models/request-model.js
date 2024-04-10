@@ -10,11 +10,14 @@ const requestSchema = new Schema({
     type : Schema.Types.ObjectId,
     ref : 'Address'
   },
-  orderType : [String],
+  orderType : String,
   quantity : Number,
   orderDate : Date,
-  purpose : [String],
-  status : [String],
+  purpose : String,
+  status :{
+    type: String,
+    default: 'pending'
+  },
   supplierId : {
     type : Schema.Types.ObjectId,
     ref : 'Supplier'

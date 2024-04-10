@@ -20,6 +20,8 @@ const { supplierController } = require('./app/controllers/supplier-controller')
 const vehicleTypeController = require('./app/controllers/vehicleType-controller')
 
 const vehicleController = require('./app/controllers/vehicle-controller')
+const requestController = require('./app/controllers/request-controller')
+const requestValidationSchema = require('./app/validations/request-validation-schema')
 
 //route to create/register user
 app.post('/api/users/register',checkSchema(userRegisterSchema),usersController.register)
@@ -100,6 +102,20 @@ app.put('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier','admin'])
 
 //route to delete vehicleType
 app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.remove)
+
+//------------------------------------------------------------------------------------------------------------------>
+
+//route to create request
+app.post('/api/requests',authenticateUser,authorizeUser(['customer']),checkSchema(requestValidationSchema), requestController.create)
+
+//route to delete request
+app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),requestController.list)
+
+//route to delete requests
+app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer','admin']),requestController.remove)
+
+
+
 
 
 app.listen(port,()=>{
