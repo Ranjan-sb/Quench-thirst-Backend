@@ -1,4 +1,5 @@
 const Supplier = require('../models/supplier-model')
+const axios = require('axios')
 //const Address = require('../models/address-model')
 const _ = require("lodash")
 const { validationResult } = require('express-validator')
@@ -32,6 +33,14 @@ supplierController.create = async(req,res)=>{
     const body = req.body
     try{
         const supplier = new Supplier(body)
+        const addressBody = _.pick(req.body,['building','locality','city','state','pinCode','country'])
+        const searchString = `${addressBody.building}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
+        const  mapResponse =  await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${searchString}&apiKey=${process.env.GEOAPIFYKEY}`)
+        if(mapResponse.data.features.length==0){
+           return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
+        }
+        const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
+        supplier.location.coordinates = location
         supplier.userId = req.user.id
         await supplier.save()
         res.status(201).json(supplier)

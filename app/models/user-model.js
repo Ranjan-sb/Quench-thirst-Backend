@@ -14,6 +14,41 @@ const userSchema = new Schema({
     isVerified:{
         type:Boolean, 
         default:false
+    },
+    building : {
+        type:String,
+        //required:true
+    },
+    locality:{
+        type:String,
+        //required:true
+    },
+    city:{
+        type:String,
+        //required:true
+    },
+    state:{
+        type:String,
+        //required:true
+    },
+    pinCode:{
+        type:String,
+        //required:true
+    },
+    country:{
+        type:String,
+        //required:true
+    },
+    location:{
+        type:{
+            type : String,
+            //required : true,
+            //enum : ['Point']
+        },
+        coordinates: {      
+            //required : true,
+            type : [Number]       //geoSpatial data
+        }
     }
 },{ timestamps : true })
 
