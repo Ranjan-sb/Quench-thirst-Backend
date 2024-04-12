@@ -40,28 +40,28 @@ const requestValidationSchema={
       errorMessage:'order type should be amongst the options'
     }
   },
-  orderDate:{
-  //   // notEmpty:{
-  //   //   errorMessage:'order date is required'
-  //   // }
-    isDate:{
-      errorMessage:'date should be valid'
-    },
-    custom:{
-      options: (value,{req})=>{
-        if(req.orderType==='immediate'){
-          return new Date()
-        }else if(req.orderType==='advance'){
-          const orderDate= new Date(value)
-          const today=new Date()
-          if(orderDate<=today){
-            throw new Error('orderDate should be in future')
-          }
-          return value
-        }
-      }
-    }
-  },
+  // orderDate:{
+  // //   // notEmpty:{
+  // //   //   errorMessage:'order date is required'
+  // //   // }
+  //   isDate:{
+  //     errorMessage:'date should be valid'
+  //   },
+  //   custom:{
+  //     options: (value,{req})=>{
+  //       if(req.orderType==='immediate'){
+  //         return new Date()
+  //       }else if(req.orderType==='advance'){
+  //         const orderDate= new Date(value)
+  //         const today=new Date()
+  //         if(orderDate<=today){
+  //           throw new Error('orderDate should be in future')
+  //         }
+  //         return value
+  //       }
+  //     }
+  //   }
+  // },
   purpose:{
     notEmpty:{
       errorMessage:'purpose is required'

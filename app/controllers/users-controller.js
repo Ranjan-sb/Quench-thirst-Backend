@@ -1,6 +1,5 @@
 require('dotenv').config()
 const axios = require('axios')
-const Address = require('../models/address-model')
 const _ = require("lodash")
 const bcryptjs = require('bcryptjs')
 const otpGenerator = require('otp-generator')
@@ -76,9 +75,6 @@ usersController.register = async (req, res) => {
     }
     try {
         const body = req.body
-        const addressBody = _.pick(req.body,['doorNo','locality','city','state','pinCode','country'])
-        const searchString = `${addressBody.doorNo}%2C%20${addressBody.locality}%2C%20${addressBody.city}%2C%20${addressBody.state}%2C%20${addressBody.pinCode}%2C%20${addressBody.country}`
-        //const searchString = `${addressBody.doorNo}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
         const user = new User(body)
         {
             const salt = await bcryptjs.genSalt()
@@ -89,7 +85,7 @@ usersController.register = async (req, res) => {
         {
             const otp = generateOtp()
             user.otp = otp
-            usersController.sendConfirmMail(user.email,user.username ,user.otp)
+            //usersController.sendConfirmMail(user.email,user.username ,user.otp)
         }
         const count = await User.find().countDocuments()
         if (count === 0) {
@@ -99,18 +95,18 @@ usersController.register = async (req, res) => {
         if (user.role.toLowerCase() === 'customer'){
             user.isApproved = true
         }
-        const  mapResponse =  await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${searchString}&apiKey=${process.env.GEOAPIFYKEY}`)
-        if(mapResponse.data.features.length==0){
-           return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
+        if(user.role  === 'customer' || user.role === 'admin'){
+            const addressBody = _.pick(req.body,['building','locality','city','state','pinCode','country'])
+            const searchString = `${addressBody.building}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
+            const  mapResponse =  await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${searchString}&apiKey=${process.env.GEOAPIFYKEY}`)
+            if(mapResponse.data.features.length==0){
+                return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
+            }
+            const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
+            user.location.coordinates = location
         }
-        const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
-        addressBody.location = {type:'Point',coordinates:location}
-        const address = new Address(addressBody)
-        address.userId = user._id
         await user.save()
-        await address.save()
         res.status(201).json(user)
-
         //usersController.sendConfirmMail(user.email, user.username)
     } catch (error) {
         console.log(error)
@@ -135,7 +131,7 @@ usersController.verifyEmailAndOtp = async (req, res) => {
         }
         await User.findOneAndUpdate({ email: email }, { $set: { isVerified: true } }, { new: true })
         res.send('User Verified')
-        usersController.sendSMS(user.username,user.mobileNumber,user.role)
+        //usersController.sendSMS(user.username,user.mobileNumber,user.role)
     } catch (err) {
         console.log(err)
         res.status(500).json({ error: 'Internal Server Error' })

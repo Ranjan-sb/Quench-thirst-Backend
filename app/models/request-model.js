@@ -6,10 +6,11 @@ const requestSchema = new Schema({
     type : Schema.Types.ObjectId,
     ref : 'User'
   },
-  addressId : {
-    type : Schema.Types.ObjectId,
-    ref : 'Address'
+  vehicleTypeId : {
+    "type" : Schema.Types.ObjectId,
+    "ref" : 'VehicleType'
   },
+  customerAddress : String,
   orderType : String,
   quantity : Number,
   orderDate : Date,

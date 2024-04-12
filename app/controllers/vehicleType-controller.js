@@ -7,7 +7,7 @@ const vehicleTypeController = {}
 vehicleTypeController.list = async(req,res)=>{
     try{
         const vehicles = await VehicleType.find().sort({createdAt:-1})
-        const records = await Vehicle.find({name})
+        //const records = await Vehicle.find({name})
         res.json(vehicles)
     } catch(error){
         console.log(error)
