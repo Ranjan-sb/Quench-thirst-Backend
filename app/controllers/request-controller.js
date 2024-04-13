@@ -56,7 +56,7 @@ requestController.create=async(req,res)=>{
           html: html, // html body
         });
       }
-      mailSend().catch(console.error)
+      //mailSend().catch(console.error)
     }
     if(request.status === 'pending'){
       request.supplierId = null
@@ -76,17 +76,6 @@ requestController.create=async(req,res)=>{
   }
 }
 
-//controller to accept request : supplier
-requestController.accepted = async(req,res)=>{
-  try{
-    id = req.params.id
-    const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true})
-    res.json(request)
-  } catch(error){
-    console.log(error)
-    res.status(500).json({error:'Internal Server Error'})
-  }
-}
 requestController.list = async(req,res)=>{
   try{
     const requests = await Request.find({customerId:req.user.id})
