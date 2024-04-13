@@ -23,6 +23,7 @@ const vehicleController = require('./app/controllers/vehicle-controller')
 const requestController = require('./app/controllers/request-controller')
 const requestValidationSchema = require('./app/validations/request-validation-schema')
 
+const ordersController = require('./app/controllers/orders-controller')
 //route to create/register user
 app.post('/api/users/register',checkSchema(userRegisterSchema),usersController.register)
 
@@ -109,7 +110,7 @@ app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['admin','supplier
 app.post('/api/requests',authenticateUser,authorizeUser(['customer']),checkSchema(requestValidationSchema), requestController.create)
 
 //accept a request by supplier
-app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),requestController.accepted)
+app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),ordersController.accepted)
 
 //route to delete request
 app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),requestController.list)
@@ -117,9 +118,18 @@ app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),req
 //route to delete requests
 app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer','admin']),requestController.remove)
 
+//------------------------------>
 
+//route to create order
+app.post('/api/orders/:id/create',authenticateUser,authorizeUser(['supplier']),ordersController.create)
 
+//route to list orders of supplier
+app.get('/api/orders',authenticateUser,authorizeUser(['supplier']),ordersController.listOrderSupplier)
 
+//route to list orders of customer
+app.get('/api/orders',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
+
+//-------------------------------------------------------->
 
 app.listen(port,()=>{
     console.log("server running on port : ",port)

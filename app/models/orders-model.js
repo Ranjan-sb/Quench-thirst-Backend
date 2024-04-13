@@ -12,13 +12,24 @@ const orderSchema = new Schema({
     ref : 'User'
   },
   orderDate : Date,
-  lineItems : [String],
+  lineItems : [{
+    quantity : Number,
+    orderType : String,
+    purpose : String,
+    vehicleTypeId : {
+      type : String,
+      ref : 'VehicleType'
+    }
+  }],
   price : Number,
-  status : [String],
-  assignTo : {
-    type : Schema.Types.ObjectId,
-    ref : 'Vehicle'
+  status : {
+    type : String,
+    default : "incomplete"
   },
+  // assignTo : {
+  //   type : Schema.Types.ObjectId,
+  //   ref : 'Vehicle'
+  // },
   requestId : {
     type : Schema.Types.ObjectId,
     ref : 'Request'
