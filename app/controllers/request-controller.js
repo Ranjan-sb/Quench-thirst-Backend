@@ -28,13 +28,13 @@ requestController.create=async(req,res)=>{
                         //isPointWithinRadius({latitude:42.24222,longitude:12.32452},{latitude:20.24222,longitude:11.32452},radius in m )
                         //isPointWithinRadius(point,center point,distance from center point)
         })          
-    console.log(filteredSuppliers)
+    //console.log(filteredSuppliers)
     if(filteredSuppliers){
       let emailArr = []
       for(let i = 0; i < filteredSuppliers.length; i++){
         emailArr.push(filteredSuppliers[i].userId.email)
       }
-      console.log(emailArr)
+      //console.log(emailArr)
 
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -56,6 +56,7 @@ requestController.create=async(req,res)=>{
           html: html, // html body
         });
       }
+      //--------------------------------->Don't forget to uncomment this
       //mailSend().catch(console.error)
     }
     if(request.status === 'pending'){

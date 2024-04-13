@@ -24,6 +24,10 @@ const requestController = require('./app/controllers/request-controller')
 const requestValidationSchema = require('./app/validations/request-validation-schema')
 
 const ordersController = require('./app/controllers/orders-controller')
+const paymentController = require('./app/controllers/payment-controller')
+
+
+
 //route to create/register user
 app.post('/api/users/register',checkSchema(userRegisterSchema),usersController.register)
 
@@ -130,6 +134,13 @@ app.get('/api/orders',authenticateUser,authorizeUser(['supplier']),ordersControl
 app.get('/api/orders',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
 
 //-------------------------------------------------------->
+
+//route to make payment
+app.post('/api/payment/:id',authenticateUser,authorizeUser(['customer']),paymentController.create)
+
+app.put('/api/payments/:id/success',paymentController.successUpdate)
+app.put('/api/payments/:id/failed',paymentController.failedUpdate)
+
 
 app.listen(port,()=>{
     console.log("server running on port : ",port)
