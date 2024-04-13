@@ -28,7 +28,7 @@ ordersController.create = async(req,res)=>{
         const requestData = await Request.findById(id).populate('vehicleTypeId')
         lineItemsArray.push({'quantity' : requestData.quantity,
     'orderType' : requestData.orderType,'purpose' : requestData.purpose,'vehicleTypeId' : requestData.vehicleTypeId})
-        console.log(lineItemsArray)
+        //console.log(lineItemsArray)
         const order = new Order(body)
         order.supplierId = req.user.id
         order.customerId = requestData.customerId
