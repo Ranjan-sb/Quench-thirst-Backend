@@ -21,6 +21,7 @@ requestController.create=async(req,res)=>{
       return { latitude:coordinates[1] ,longitude:coordinates[0] }
     }
     const user1 = await User.findById(req.user.id)
+    //request.customerEmail = user1.email
     request.customerAddress = `${user1.building} ${user1.locality} ${user1.city} ${user1.pinCode}`
     const customerCoordinates = user1.location.coordinates
     const suppliers = await Supplier.find().populate('userId',['email','_id'])//.populate('userId',['email'])
@@ -104,11 +105,12 @@ requestController.list = async(req,res)=>{
 requestController.accepted = async(req,res)=>{
   try{
     const id = req.params.id
-    const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId')
+    const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId').populate('customerId')
     const lineItemsArray = []
     lineItemsArray.push({'quantity' : request.quantity,
     'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})
     //console.log(lineItemsArray)
+    const user = await User.findOne({_id : request.customerId})
     const order = new Order()
     order.supplierId = req.user.id
     order.customerId = request.customerId
@@ -126,6 +128,28 @@ requestController.accepted = async(req,res)=>{
       })
     order.price = totalPrice
     await order.save()
+    
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      }
+    });
+
+    const html = `<p><b>Hi,</b><br />Your Order has been accepted by a supplier</p>`
+    async function mailSend() {
+      // send mail with defined transport object
+      const info = await transporter.sendMail({
+        from: process.env.SENDER_EMAIL, // sender email address
+        to: user.email,
+        subject: "Request for tanker", // Subject line
+        html: html, // html body
+      });
+    }
+    mailSend().catch(console.error)
     res.json(request)
   } catch(error){
     console.log(error)
@@ -135,7 +159,9 @@ requestController.accepted = async(req,res)=>{
 
 requestController.getRequestsOfSupplier = async(req,res)=>{
   try{
-    const requests = await Request.find({ 'suppliers.supplierId ': req.user.id })
+    const requests = await Request.find({ 'suppliers.supplierId': req.user.id })
+    //console.log(req.user.id)
+    //console.log(requests)
     res.json(requests)
   } catch(error){
     console.log(error)
