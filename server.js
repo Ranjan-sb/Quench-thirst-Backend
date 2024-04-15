@@ -114,7 +114,7 @@ app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['admin','supplier
 app.post('/api/requests',authenticateUser,authorizeUser(['customer']),checkSchema(requestValidationSchema), requestController.create)
 
 //accept a request by supplier
-app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),ordersController.accepted)
+app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),requestController.accepted)
 
 //route to delete request
 app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),requestController.list)

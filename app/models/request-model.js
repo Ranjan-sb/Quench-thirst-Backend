@@ -22,7 +22,11 @@ const requestSchema = new Schema({
   supplierId : {
     type : Schema.Types.ObjectId,
     ref : 'Supplier'
-  }
+  },
+  suppliers : [{
+    supplierId : Schema.Types.ObjectId,
+    email : String
+  }]
 }, {timestamps:true})
 
 const Request=model('Request', requestSchema)
