@@ -2,56 +2,43 @@ const { validationResult } = require('express-validator')
 const Order = require('../models/orders-model')
 const Request = require('../models/request-model')
 const ordersController = {}
-
-//controller to accept request : supplier
-ordersController.accepted = async(req,res)=>{
-    try{
-      id = req.params.id
-      const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true})
-      res.json(request)
-    } catch(error){
-      console.log(error)
-      res.status(500).json({error:'Internal Server Error'})
-    }
-  }
   
-
-ordersController.create = async(req,res)=>{
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()})
-    }
-    try{
-        const {id} = req.params
-        const {body} = req
-        const lineItemsArray = []
-        const requestData = await Request.findById(id).populate('vehicleTypeId')
-        lineItemsArray.push({'quantity' : requestData.quantity,
-    'orderType' : requestData.orderType,'purpose' : requestData.purpose,'vehicleTypeId' : requestData.vehicleTypeId})
-        //console.log(lineItemsArray)
-        const order = new Order(body)
-        order.supplierId = req.user.id
-        order.customerId = requestData.customerId
-        order.orderDate = requestData.orderDate
-        order.lineItems = lineItemsArray
-        order.requestId = id
-        let totalPrice = 0
-        lineItemsArray.forEach(item => {
-            // Find the price for the specified purpose in the vehicle type prices
-            const priceInfo = item.vehicleTypeId.prices.find(price => price.purpose === item.purpose);
-            if (priceInfo) {
-              // Add the calculated price to the total
-              totalPrice += priceInfo.price * item.quantity;
-            }
-          })
-        order.price = totalPrice
-        await order.save()
-        res.status(201).json(order)
-    } catch(error){
-        console.log(error)
-        res.status(500).json({error:"Internal Server Error"})
-    }
-}
+// ordersController.create = async(req,res)=>{
+//     const errors = validationResult(req)
+//     if(!errors.isEmpty()){
+//         return res.status(400).json({errors:errors.array()})
+//     }
+//     try{
+//         const {id} = req.params
+//         const {body} = req
+//         const lineItemsArray = []
+//         const requestData = await Request.findById(id).populate('vehicleTypeId')
+//         lineItemsArray.push({'quantity' : requestData.quantity,
+//     'orderType' : requestData.orderType,'purpose' : requestData.purpose,'vehicleTypeId' : requestData.vehicleTypeId})
+//         //console.log(lineItemsArray)
+//         const order = new Order(body)
+//         order.supplierId = req.user.id
+//         order.customerId = requestData.customerId
+//         order.orderDate = requestData.orderDate
+//         order.lineItems = lineItemsArray
+//         order.requestId = id
+//         let totalPrice = 0
+//         lineItemsArray.forEach(item => {
+//             // Find the price for the specified purpose in the vehicle type prices
+//             const priceInfo = item.vehicleTypeId.prices.find(price => price.purpose === item.purpose);
+//             if (priceInfo) {
+//               // Add the calculated price to the total
+//               totalPrice += priceInfo.price * item.quantity;
+//             }
+//           })
+//         order.price = totalPrice
+//         await order.save()
+//         res.status(201).json(order)
+//     } catch(error){
+//         console.log(error)
+//         res.status(500).json({error:"Internal Server Error"})
+//     }
+// }
 
 ordersController.listOrderSupplier = async(req,res)=>{
     try{

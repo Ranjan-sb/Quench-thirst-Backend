@@ -116,6 +116,9 @@ app.post('/api/requests',authenticateUser,authorizeUser(['customer']),checkSchem
 //accept a request by supplier
 app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),requestController.accepted)
 
+//route to get requests for particular supplier
+app.get('/api/requests/suppliers/my',authenticateUser,authorizeUser(['supplier']),requestController.getRequestsOfSupplier)
+
 //route to delete request
 app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),requestController.list)
 
@@ -123,9 +126,6 @@ app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),req
 app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer','admin']),requestController.remove)
 
 //------------------------------>
-
-//route to create order
-app.post('/api/orders/:id/create',authenticateUser,authorizeUser(['supplier']),ordersController.create)
 
 //route to list orders of supplier
 app.get('/api/orders',authenticateUser,authorizeUser(['supplier']),ordersController.listOrderSupplier)

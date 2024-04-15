@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator')
 const {isPointWithinRadius} = require('geolib')
 const Request = require('../models/request-model')
 const Supplier = require('../models/supplier-model')
+const Order = require('../models/orders-model')
 const User = require('../models/user-model')
 const nodemailer = require('nodemailer')
 
@@ -36,7 +37,11 @@ requestController.create=async(req,res)=>{
         emailArr.push(filteredSuppliers[i].userId)
       }
       console.log("emailArr",emailArr)
-      request.suppliers = emailArr
+      const  newData = emailArr.map((ele)=>({
+        supplierId : ele._id,
+        email: ele.email
+      }))
+      request.suppliers = newData
 
       
       const transporter = nodemailer.createTransport({
@@ -98,9 +103,40 @@ requestController.list = async(req,res)=>{
 
 requestController.accepted = async(req,res)=>{
   try{
-    id = req.params.id
-    const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true})
+    const id = req.params.id
+    const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId')
+    const lineItemsArray = []
+    lineItemsArray.push({'quantity' : request.quantity,
+    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})
+    //console.log(lineItemsArray)
+    const order = new Order()
+    order.supplierId = req.user.id
+    order.customerId = request.customerId
+    order.orderDate = request.orderDate
+    order.lineItems = lineItemsArray
+    order.requestId = id
+    let totalPrice = 0
+    lineItemsArray.forEach(item => {
+        // Find the price for the specified purpose in the vehicle type prices
+        const priceInfo = item.vehicleTypeId.prices.find(price => price.purpose === item.purpose);
+        if (priceInfo) {
+          // Add the calculated price to the total
+          totalPrice += priceInfo.price * item.quantity;
+        }
+      })
+    order.price = totalPrice
+    await order.save()
     res.json(request)
+  } catch(error){
+    console.log(error)
+    res.status(500).json({error:'Internal Server Error'})
+  }
+}
+
+requestController.getRequestsOfSupplier = async(req,res)=>{
+  try{
+    const requests = await Request.find({ 'suppliers.supplierId ': req.user.id })
+    res.json(requests)
   } catch(error){
     console.log(error)
     res.status(500).json({error:'Internal Server Error'})
@@ -121,3 +157,9 @@ requestController.remove = async(req,res)=>{
 }
 
 module.exports=requestController
+
+
+// req.user.id 
+
+//GET  /api/requests/suppliers/my
+// Request.find({ 'suppliers.supplierId ': req.user.id })
