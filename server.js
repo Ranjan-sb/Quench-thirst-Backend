@@ -133,7 +133,7 @@ app.get('/api/orders',authenticateUser,authorizeUser(['supplier']),ordersControl
 //route to list orders of customer
 app.get('/api/orders',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
 
-//-------------------------------------------------------->
+//------------------------------------------------------------------------------------------------------->
 
 //route to make payment
 app.post('/api/payment/:id',authenticateUser,authorizeUser(['customer']),paymentController.create)
