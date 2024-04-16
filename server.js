@@ -75,7 +75,7 @@ app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)
 
 //route to delete supplier
-app.delete('/api/suppliers',authenticateUser,supplierController.remove)
+app.delete('/api/suppliers/:id',authenticateUser,supplierController.remove)
 
 //vehicle type module ------------------------------------------------------------------------->
 
