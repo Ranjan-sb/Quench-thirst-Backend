@@ -159,7 +159,7 @@ requestController.accepted = async(req,res)=>{
 
 requestController.getRequestsOfSupplier = async(req,res)=>{
   try{
-    const requests = await Request.find({ 'suppliers.supplierId': req.user.id })
+    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId : null })
     //console.log(req.user.id)
     //console.log(requests)
     res.json(requests)
@@ -174,6 +174,7 @@ requestController.getRequestsOfSupplier = async(req,res)=>{
 requestController.remove = async(req,res)=>{
   const {id} = req.params
   try{
+    //supplierId
     const request = await Request.findByIdAndDelete(id,{customerId:req.user.id})
     res.json(request)
   } catch(error){
