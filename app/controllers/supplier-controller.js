@@ -18,7 +18,7 @@ supplierController.list = async (req,res)=>{
 
 supplierController.yetToApprove=async(req,res)=>{
     try{
-        const suppliers= await User.find({role:"supplier",isApproved:false})
+        const suppliers= await User.find({role:"supplier",isApproved:false}).select('username role isApproved')
         res.json(suppliers)
     }catch(err){
         console.log(err)
