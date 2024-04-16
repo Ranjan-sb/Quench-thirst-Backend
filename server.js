@@ -68,6 +68,9 @@ app.post('/api/suppliers',authenticateUser,supplierController.create)
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
 
+//route to list suppliers who are yet to be approved by admin
+app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
+
 // route to get particular supplier
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)
 

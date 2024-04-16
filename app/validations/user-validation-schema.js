@@ -51,16 +51,30 @@ const userRegisterSchema = {
             options : [['admin','supplier','customer']],
             errorMessage : 'role should be Admin, Supplier or Customer'
         }
-    }
+    },
     // building:{
-    //     notEmpty:{
-    //         errorMessage:"Building cannot be empty."
-    //     },
-    //     isLength:{
-    //         options:{
-    //             min:2,
-    //         },
-    //         errorMessage:"At least 2 characters required."
+        // notEmpty:{
+        //     errorMessage:"Building cannot be empty."
+        // },
+        // isLength:{
+        //     options:{
+        //         min:2,
+        //     },
+        //     errorMessage:"At least 2 characters required."
+        // }
+    //     custom:{
+    //         options:async function (value, {req}){
+    //             try{
+    //                 if(req && req.role && req.role.includes('admin') || req.role.includes('customer')){
+    //                     if(!value || value.trim()==''){
+    //                         throw new Error('buliding details required')
+    //                     }
+    //                 }
+    //                 return true
+    //             }catch(err){
+    //                 throw new Error(err.message)
+    //             }
+    //         }
     //     }
     // },
     // locality:{

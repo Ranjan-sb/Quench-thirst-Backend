@@ -1,4 +1,5 @@
 const Supplier = require('../models/supplier-model')
+const User=require('../models/user-model')
 const axios = require('axios')
 //const Address = require('../models/address-model')
 const _ = require("lodash")
@@ -11,6 +12,16 @@ supplierController.list = async (req,res)=>{
         const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
         res.json(supplier)
     } catch(err){
+        res.status(500).json({error:'Internal Server Error'})
+    }
+}
+
+supplierController.yetToApprove=async(req,res)=>{
+    try{
+        const suppliers= await User.find({role:"supplier",isApproved:false})
+        res.json(suppliers)
+    }catch(err){
+        console.log(err)
         res.status(500).json({error:'Internal Server Error'})
     }
 }
