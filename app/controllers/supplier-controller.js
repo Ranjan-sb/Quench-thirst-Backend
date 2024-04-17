@@ -9,7 +9,7 @@ const supplierController = {}
 
 supplierController.list = async (req,res)=>{
     try{
-        const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber', 'isApproved'])
+        const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
         res.json(supplier)
     } catch(err){
         res.status(500).json({error:'Internal Server Error'})
@@ -18,7 +18,7 @@ supplierController.list = async (req,res)=>{
 
 supplierController.yetToApprove=async(req,res)=>{
     try{
-        const suppliers= await User.find({role:"supplier",isApproved:false}).select('username role isApproved')
+        const suppliers= await Supplier.find({isApproved:false})
         res.json(suppliers)
     }catch(err){
         console.log(err)

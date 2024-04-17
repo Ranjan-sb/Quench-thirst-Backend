@@ -90,11 +90,11 @@ usersController.register = async (req, res) => {
         const count = await User.find().countDocuments()
         if (count === 0) {
             user.role = 'admin'
-            user.isApproved = true
+            // user.isApproved = true
         }
-        if (user.role.toLowerCase() === 'customer'){
-            user.isApproved = true
-        }
+        // if (user.role.toLowerCase() === 'customer'){
+        //     user.isApproved = true
+        // }
         if(user.role  === 'customer' || user.role === 'admin'){
             const addressBody = _.pick(req.body,['building','locality','city','state','pinCode','country'])
             const searchString = `${addressBody.building}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`

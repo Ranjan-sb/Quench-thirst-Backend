@@ -25,6 +25,7 @@ const requestValidationSchema = require('./app/validations/request-validation-sc
 
 const ordersController = require('./app/controllers/orders-controller')
 const paymentController = require('./app/controllers/payment-controller')
+const vehicleTypeValidation = require('./app/validations/vehiclesType-validation-schema')
 
 
 
@@ -86,7 +87,7 @@ app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier']),
 app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.particularType)
 
 //route to create vehicleType
-app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),vehicleTypeController.create)
+app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),checkSchema(vehicleTypeValidation),vehicleTypeController.create)
 
 //route to update vehicleType
 app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.update)

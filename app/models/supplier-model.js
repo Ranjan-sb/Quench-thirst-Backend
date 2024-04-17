@@ -48,7 +48,11 @@ const supplierSchema=new Schema({
     accNum : String,
     IFSC : String,
     branch : String
-  }
+  },
+  isApproved:{
+   type:Boolean,
+   default:false
+   }
 },{timestamps:true})
 
 const Supplier = model('Supplier', supplierSchema)

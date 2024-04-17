@@ -7,10 +7,10 @@ const userSchema = new Schema({
     mobileNumber : String,
     role : String,
     otp : String,
-    isApproved:{
-        type:Boolean,
-        default:false
-    },
+    // isApproved:{
+    //     type:Boolean,
+    //     default:false
+    // },
     isVerified:{
         type:Boolean, 
         default:false
