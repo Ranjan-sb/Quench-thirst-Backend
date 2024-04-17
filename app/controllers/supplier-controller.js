@@ -9,7 +9,7 @@ const supplierController = {}
 
 supplierController.list = async (req,res)=>{
     try{
-        const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
+        const supplier = await Supplier.find({isApproved : true}).sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
         res.json(supplier)
     } catch(err){
         res.status(500).json({error:'Internal Server Error'})
@@ -23,6 +23,22 @@ supplierController.yetToApprove=async(req,res)=>{
     }catch(err){
         console.log(err)
         res.status(500).json({error:'Internal Server Error'})
+    }
+}
+
+supplierController.approveSupplier = async(req,res)=>{
+    const {id} = req.params
+    try{
+        const supplier = await Supplier.findById(id)
+        if(!supplier){
+            return res.status(404).json({ message: 'Supplier not found' }) 
+        }
+        const supplierNew = await Supplier.findByIdAndUpdate(id,{$set :{isApproved:true}},{new:true})
+        res.json(supplierNew)
+        
+    } catch(error){
+        console.log(error)
+        res.status(500).json({error:'Internal server error'})
     }
 }
 

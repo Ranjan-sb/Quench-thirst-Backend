@@ -58,8 +58,6 @@ app.get('/api/users/account',authenticateUser,usersController.account)
 //route to get all users
 app.get('/api/users',authenticateUser,authorizeUser(['admin']),usersController.read)
 
-//route to approve supplier by admin
-app.put('/api/users/:id/approve',authenticateUser,authorizeUser(['admin']),usersController.approveSupplier)
 
 //SUPPLIER MODULE------------------------------------------------------------------------------>
 
@@ -71,6 +69,9 @@ app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierContr
 
 //route to list suppliers who are yet to be approved by admin
 app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
+
+//route to approve supplier by admin
+app.put('/api/users/:id/approve',authenticateUser,authorizeUser(['admin']),supplierController.approveSupplier)
 
 // route to get particular supplier
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)

@@ -95,7 +95,7 @@ usersController.register = async (req, res) => {
         // if (user.role.toLowerCase() === 'customer'){
         //     user.isApproved = true
         // }
-        if(user.role  === 'customer' || user.role === 'admin'){
+        if(user.role  === 'customer'){
             const addressBody = _.pick(req.body,['building','locality','city','state','pinCode','country'])
             const searchString = `${addressBody.building}${addressBody.locality}${addressBody.city}${addressBody.state}${addressBody.pinCode}${addressBody.country}`
             const  mapResponse =  await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${searchString}&apiKey=${process.env.GEOAPIFYKEY}`)
@@ -237,21 +237,7 @@ usersController.account = async (req,res)=>{
     }
 }
 
-usersController.approveSupplier = async(req,res)=>{
-    const {id} = req.params
-    try{
-        const supplier = await User.findById(id)
-        if(!supplier){
-            return res.status(404).json({ message: 'Supplier not found' }) 
-        }
-        const supplierNew = await User.findByIdAndUpdate(id,{$set :{isApproved:true}},{new:true})
-        res.json(supplierNew)
-        
-    } catch(error){
-        console.log(err)
-        res.status(500).json({error:'Internal server error'})
-    }
-}
+
 
 //to delete the particular user
 usersController.remove = async (req, res) => {
