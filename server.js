@@ -25,6 +25,7 @@ const requestValidationSchema = require('./app/validations/request-validation-sc
 
 const ordersController = require('./app/controllers/orders-controller')
 const paymentController = require('./app/controllers/payment-controller')
+const vehicleTypeValidation = require('./app/validations/vehiclesType-validation-schema')
 
 
 
@@ -68,11 +69,14 @@ app.post('/api/suppliers',authenticateUser,supplierController.create)
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
 
+//route to list suppliers who are yet to be approved by admin
+app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
+
 // route to get particular supplier
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)
 
 //route to delete supplier
-app.delete('/api/suppliers',authenticateUser,supplierController.remove)
+app.delete('/api/suppliers/:id',authenticateUser,supplierController.remove)
 
 //vehicle type module ------------------------------------------------------------------------->
 
@@ -83,7 +87,7 @@ app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier']),
 app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.particularType)
 
 //route to create vehicleType
-app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),vehicleTypeController.create)
+app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),checkSchema(vehicleTypeValidation),vehicleTypeController.create)
 
 //route to update vehicleType
 app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.update)

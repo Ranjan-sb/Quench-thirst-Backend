@@ -4,23 +4,35 @@ const vehicleTypeValidation={
   name:{
     notEmpty:{
       errorMessage:'vehicle name is required'
-    }
-  },
-  capacity:{
-    notEmpty:{
-      errorMessage:'capacity is required'
     },
     isIn:{
-      options:[[6000,8000,12000]],
-      errorMessage:'capacity should be 6000L or 8000L or 12000L'
+      options:[['tractor','tipper','lorry']],
+      errorMessage:'name should be tractor, tipper or lorry'
     }
   },
+  // capacity:{
+  //   notEmpty:{
+  //     errorMessage:'capacity is required'
+  //   },
+  //   isIn:{
+  //     options:[[6000,8000,12000]],
+  //     errorMessage:'capacity should be 6000L or 8000L or 12000L'
+  //   }
+  // },
   quantity:{
     notEmpty:{
       errorMessage:'quantity cannot be zero or empty'
     },
-    isNumeric:{
+    isNumeric:{ 
       errorMessage:'quantity should be in numbers'
+    },
+    custom:{
+      options:(value)=>{
+        if(value<=0){
+          throw new Error('quantity should be greater than 0')
+        }
+        return true
+      }
     }
   },
   prices:{
@@ -28,7 +40,7 @@ const vehicleTypeValidation={
       errorMessage:'prices should be an array'
     },
     custom:{
-      option: function (value){
+      options: function (value){
         if(value.length==0){
           throw new Error('prices should not be empty')
         }
@@ -44,3 +56,4 @@ const vehicleTypeValidation={
 }
 
 module.exports=vehicleTypeValidation
+
