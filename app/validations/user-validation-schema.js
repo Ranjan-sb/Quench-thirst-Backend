@@ -204,6 +204,40 @@ const forgotPasswordValidation = {
     }
 }
 
+const updatingPassword = {
+    oldPassword: {
+        exists: {
+            errorMessage: 'password field is required'
+        },
+        notEmpty: {
+            errorMessage: 'password field must have some value'
+        },
+        isLength: {
+            options: { min: 8, max: 128 },
+            errorMessage: 'password field value must be between 8-128 characters'
+        }
+        // isStrongPassword: {
+        //     errorMessage: 'password must have atleast one uppercase, one number and one special character'
+        // }
+    },
+    newPassword:{
+        exists: {
+            errorMessage: 'password field is required'
+        },
+        notEmpty: {
+            errorMessage: 'password field must have some value'
+        },
+        isLength: {
+            options: { min: 8, max: 128 },
+            errorMessage: 'password field value must be between 8-128 characters'
+        },
+        isStrongPassword: {
+            errorMessage: 'password must have atleast one uppercase, one number and one special character'
+        }
+    }
+}
+
+
 //for resending otp
 const resendOTPEmailValidationSchema = {
     email: {
@@ -252,6 +286,7 @@ module.exports = {
     userRegisterSchema,
     verifyEmailAndOtpValidationSchema,
     forgotPasswordValidation,
+    updatingPassword,
     loginValidationSchema,
     resendOTPEmailValidationSchema
 }

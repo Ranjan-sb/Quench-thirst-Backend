@@ -36,7 +36,7 @@ vehicleController.list = async(req,res)=>{
 vehicleController.particularVehicle = async (req,res)=>{
     try {
         const {id} = req.params
-        const vehicle = await Vehicle.findById(id).populate('vehicleTypeId',['name','prices.purpose','prices.price'])
+        const vehicle = await Vehicle.findOne({_id:id, supplierId:req.user.id}).populate('vehicleTypeId',['name','prices.purpose','prices.price'])
         res.json(vehicle)
     } catch(err){
         console.log(err)
@@ -47,7 +47,7 @@ vehicleController.particularVehicle = async (req,res)=>{
 vehicleController.remove = async (req, res) => {
     try {
         const {id} = req.params
-        const vehicle = await Vehicle.findByIdAndDelete(id)
+        const vehicle = await Vehicle.findOneAndDelete({_id:id, supplierId:req.user.id})
         if (!vehicle) {
             return res.status(404).json({ error: 'record not found' })
         }
@@ -61,8 +61,8 @@ vehicleController.remove = async (req, res) => {
 vehicleController.update = async(req,res)=>{
     try{
         const {id} = req.params
-        const body = _.pick(req.body,['vehicleNumber','vehicleTypeId'])
-        const newVehicle = await Vehicle.findByIdAndUpdate({_id : id},body,{new:true})
+        const body = _.pick(req.body,['vehicleNumber','vehicleTypeId','capacity'])
+        const newVehicle = await Vehicle.findOneAndUpdate({_id : id, supplierId:req.user.id},body,{new:true})
         res.json(newVehicle)
     } catch(error){
         console.log(error)

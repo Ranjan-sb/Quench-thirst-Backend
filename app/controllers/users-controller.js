@@ -188,6 +188,34 @@ usersController.forgotPassword = async (req, res) => {
 }
 
 
+//to update the password
+// usersController.updatePassword = async (req, res) => {
+//     const errors = validationResult(req)
+//     if(!errors.isEmpty()){
+//         return res.status(400).json({errors:errors.array()})
+//     }
+//     const { oldPassword, newPassword } = _.pick(req.body, ['oldPassword', 'newPassword'])
+//     try {
+//         const user = await User.findOne({ _id: req.user.id })
+//         if (!user) {
+//             return res.status(404).json({ error: 'record not found' })
+//         }
+//         const checkPassword = await bcryptjs.compare(oldPassword, user.password)
+//         if (!checkPassword) {
+//             return res.status(400).json({ error: 'Invalid Password' })
+//         }
+//         const salt = await bcryptjs.genSalt()
+//         const encryptedPassword = await bcryptjs.hash(newPassword, salt)
+//         const user1 = await User.findOneAndUpdate({ _id: req.user.id }, { $set: { oldPassword: encryptedPassword } }, { new: true })
+//         res.json(user1)
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).json({ error: 'Internal Server Error' })
+//     }
+// }
+
+
+
 
 //To login to QT-APP
 usersController.login = async (req, res) => {

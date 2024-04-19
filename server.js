@@ -11,7 +11,7 @@ app.use(express.json())
 const configureDB = require('./config/dbConfig')
 configureDB()
 
-const {userRegisterSchema,verifyEmailAndOtpValidationSchema,forgotPasswordValidation,resendOTPEmailValidationSchema,loginValidationSchema} = require('./app/validations/user-validation-schema')
+const {userRegisterSchema,verifyEmailAndOtpValidationSchema,forgotPasswordValidation,resendOTPEmailValidationSchema,loginValidationSchema, updatingPassword} = require('./app/validations/user-validation-schema')
 const {usersController} = require('./app/controllers/users-controller')
 
 const {authenticateUser,authorizeUser} = require('./app/middlewares/auth')
@@ -26,6 +26,7 @@ const requestValidationSchema = require('./app/validations/request-validation-sc
 const ordersController = require('./app/controllers/orders-controller')
 const paymentController = require('./app/controllers/payment-controller')
 const vehicleTypeValidation = require('./app/validations/vehiclesType-validation-schema')
+const vehicleValidationSchema = require('./app/validations/vehicles-validations-schema')
 
 
 
@@ -37,6 +38,9 @@ app.post('/api/users/verifyEmail',checkSchema(verifyEmailAndOtpValidationSchema)
 
 //route for forgot password -> mail and otp and new password 
 app.put('/api/users/forgotPassword', checkSchema(forgotPasswordValidation),usersController.forgotPassword )
+
+//route for updating password 
+// app.put("/api/users/updatePassword",authenticateUser,checkSchema(updatingPassword),usersController.updatePassword)
 
 //for reverification of email while login if not verified and for forgot password mail to verify mail
 app.post('/api/users/reverifyEmail',checkSchema(resendOTPEmailValidationSchema) ,usersController.resendOTP)
@@ -91,15 +95,15 @@ app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier
 app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),checkSchema(vehicleTypeValidation),vehicleTypeController.create)
 
 //route to update vehicleType
-app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.update)
+app.put('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),checkSchema(vehicleTypeValidation),vehicleTypeController.update)
 
 //route to delete vehicleType
-app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.remove)
+app.delete('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin']),vehicleTypeController.remove)
 
 //------------------------------------------------------------------------------------------------------------------>
 
 //route to create vehicle
-app.post('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleController.create)
+app.post('/api/vehicles',authenticateUser,authorizeUser(['supplier']),checkSchema(vehicleValidationSchema),vehicleController.create)
 
 //list all vehicles of supplier
 app.get('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleController.list)
@@ -108,10 +112,10 @@ app.get('/api/vehicles',authenticateUser,authorizeUser(['supplier']),vehicleCont
 app.get('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),vehicleController.particularVehicle)
 
 //route to update vehicle
-app.put('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier','admin']),vehicleController.update)
+app.put('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),checkSchema(vehicleValidationSchema),vehicleController.update)
 
-//route to delete vehicleType
-app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.remove)
+//route to delete vehicle
+app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),vehicleController.remove)
 
 //------------------------------------------------------------------------------------------------------------------>
 
@@ -124,19 +128,19 @@ app.put('/api/requests/:id/accept',authenticateUser,authorizeUser(['supplier']),
 //route to get requests for particular supplier
 app.get('/api/requests/suppliers/my',authenticateUser,authorizeUser(['supplier']),requestController.getRequestsOfSupplier)
 
-//route to delete request
-app.get('/api/requests',authenticateUser,authorizeUser(['customer','admin']),requestController.list)
+//route to see request
+app.get('/api/requests',authenticateUser,authorizeUser(['customer']),requestController.list)
 
 //route to delete requests
-app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer','admin']),requestController.remove)
+app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer']),requestController.remove)
 
 //------------------------------>
 
 //route to list orders of supplier
-app.get('/api/orders',authenticateUser,authorizeUser(['supplier']),ordersController.listOrderSupplier)
+app.get('/api/orders/supplier',authenticateUser,authorizeUser(['supplier']),ordersController.listOrderSupplier)
 
 //route to list orders of customer
-app.get('/api/orders',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
+app.get('/api/orders/customer',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
 
 //------------------------------------------------------------------------------------------------------->
 

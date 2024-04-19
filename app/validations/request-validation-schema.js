@@ -23,6 +23,14 @@ const requestValidationSchema={
   //     errorMessage:'valid addressId is required'
   //   }
   // },
+  vehicleTypeId:{
+    notEmpty:{
+      errorMessage:'please select vehicle type'
+    },
+    isMongoId:{
+      errorMessage:'enter valid vehicleTypeId'
+    }
+  },
   quantity:{
     notEmpty:{
       errorMessage:'quantity is required'
