@@ -1,12 +1,12 @@
 const vehicleValidationSchema={
-  supplierId:{
-    notEmpty:{
-      errorMessage:'supplier Id is required'
-    },
-    isMongoId:{
-      errorMessage:'valid Id is required'
-    }
-  },
+  // supplierId:{
+  //   notEmpty:{
+  //     errorMessage:'supplier Id is required'
+  //   },
+  //   isMongoId:{
+  //     errorMessage:'valid Id is required'
+  //   }
+  // },
   vehicleNumber:{
     notEmpty:{
       errorMessage:'vehicle number is required'

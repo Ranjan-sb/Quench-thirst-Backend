@@ -78,10 +78,10 @@ requestController.create=async(req,res)=>{
     if(body.orderType==='immediate'){
       request.orderDate=new Date()
     }else if(body.orderType==='advance'){
-      request.orderDate=body.orderDate  
+      request.orderDate=body.orderDate  //from postman- yyyy-mm-dd
     }
     await request.save()
-    res.status(201).json(request)
+    res.status(201).json(request) 
 
   }catch(error){
     console.log(error)
@@ -175,7 +175,7 @@ requestController.remove = async(req,res)=>{
   const {id} = req.params
   try{
     //supplierId
-    const request = await Request.findByIdAndDelete(id,{customerId:req.user.id})
+    const request = await Request.findOneAndDelete({_id:id,customerId:req.user.id})
     res.json(request)
   } catch(error){
     console.log(error)
