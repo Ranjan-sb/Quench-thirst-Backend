@@ -7,47 +7,34 @@ const userSchema = new Schema({
     mobileNumber : String,
     role : String,
     otp : String,
-    // isApproved:{
-    //     type:Boolean,
-    //     default:false
-    // },
     isVerified:{
         type:Boolean, 
         default:false
     },
     building : {
-        type:String,
-        //required:true
+        type:String
     },
     locality:{
-        type:String,
-        //required:true
+        type:String
     },
     city:{
-        type:String,
-        //required:true
+        type:String
     },
     state:{
-        type:String,
-        //required:true
+        type:String
     },
     pinCode:{
-        type:String,
-        //required:true
+        type:String
     },
     country:{
-        type:String,
-        //required:true
+        type:String
     },
     location:{
         type:{
-            type : String,
-            //required : true,
-            //enum : ['Point']
+            type : String
         },
         coordinates: {      
-            //required : true,
-            type : [Number]       //geoSpatial data
+            type : [Number] //geoSpatial Data
         }
     }
 },{ timestamps : true })

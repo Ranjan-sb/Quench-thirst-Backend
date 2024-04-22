@@ -193,14 +193,14 @@ const forgotPasswordValidation = {
         },
         notEmpty: {
             errorMessage: 'password field must have some value'
-        },
-        isLength: {
-            options: { min: 8, max: 128 },
-            errorMessage: 'password field value must be between 8-128 characters'
-        },
-        isStrongPassword: {
-            errorMessage: 'password must have at least one uppercase, one number and one special character'
         }
+        // isLength: {
+        //     options: { min: 8, max: 128 },
+        //     errorMessage: 'password field value must be between 8-128 characters'
+        // },
+        // isStrongPassword: {
+        //     errorMessage: 'password must have at least one uppercase, one number and one special character'
+        // }
     }
 }
 
@@ -211,11 +211,11 @@ const updatingPassword = {
         },
         notEmpty: {
             errorMessage: 'password field must have some value'
-        },
-        isLength: {
-            options: { min: 8, max: 128 },
-            errorMessage: 'password field value must be between 8-128 characters'
         }
+        // isLength: {
+        //     options: { min: 8, max: 128 },
+        //     errorMessage: 'password field value must be between 8-128 characters'
+        // }
         // isStrongPassword: {
         //     errorMessage: 'password must have atleast one uppercase, one number and one special character'
         // }
@@ -226,14 +226,14 @@ const updatingPassword = {
         },
         notEmpty: {
             errorMessage: 'password field must have some value'
-        },
-        isLength: {
-            options: { min: 8, max: 128 },
-            errorMessage: 'password field value must be between 8-128 characters'
-        },
-        isStrongPassword: {
-            errorMessage: 'password must have atleast one uppercase, one number and one special character'
         }
+        // isLength: {
+        //     options: { min: 8, max: 128 },
+        //     errorMessage: 'password field value must be between 8-128 characters'
+        // },
+        // isStrongPassword: {
+        //     errorMessage: 'password must have atleast one uppercase, one number and one special character'
+        // }
     }
 }
 
@@ -275,11 +275,11 @@ const loginValidationSchema = {
         },
         notEmpty: {
             errorMessage: 'password field must have some value'
-        },
-        isLength: {
-            options: { min: 8, max: 128 },
-            errorMessage: 'password field value must be between 8-128 characters'
         }
+        // isLength: {
+        //     options: { min: 8, max: 128 },
+        //     errorMessage: 'password field value must be between 8-128 characters'
+        // }
     }
 }
 module.exports = {
