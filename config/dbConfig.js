@@ -1,8 +1,9 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 
 const configureDB = async ()=>{
     try {
-        const db = await mongoose.connect('mongodb://127.0.0.1:27017/qt-2024')
+        const db = await mongoose.connect(process.env.DB_LINK)
         console.log('Successfully Connected to db')
     } catch(error) {
         console.log('error connecting to db : ',error)

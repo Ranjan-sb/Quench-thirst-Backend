@@ -66,7 +66,7 @@ app.get('/api/users',authenticateUser,authorizeUser(['admin']),usersController.r
 //SUPPLIER MODULE------------------------------------------------------------------------------>
 
 //route to create supplier
-app.post('/api/suppliers',authenticateUser,supplierController.create)
+app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),supplierController.create)
 
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
