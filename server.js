@@ -72,7 +72,7 @@ app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),supplierC
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
 
 //route to list suppliers who are yet to be approved by admin
-app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
+//app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
 
 //route to approve supplier by admin
 app.put('/api/users/:id/approve',authenticateUser,authorizeUser(['admin']),supplierController.approveSupplier)

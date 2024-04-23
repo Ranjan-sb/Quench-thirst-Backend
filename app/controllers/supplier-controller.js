@@ -1,7 +1,5 @@
 const Supplier = require('../models/supplier-model')
-const User=require('../models/user-model')
 const axios = require('axios')
-//const Address = require('../models/address-model')
 const _ = require("lodash")
 const { validationResult } = require('express-validator')
 
@@ -9,19 +7,10 @@ const supplierController = {}
 
 supplierController.list = async (req,res)=>{
     try{
-        const supplier = await Supplier.find({isApproved : true}).sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
+        //const supplier = await Supplier.find({isApproved : true}).sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
+        const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
         res.json(supplier)
     } catch(err){
-        res.status(500).json({error:'Internal Server Error'})
-    }
-}
-
-supplierController.yetToApprove=async(req,res)=>{
-    try{
-        const suppliers= await Supplier.find({isApproved:false})
-        res.json(suppliers)
-    }catch(err){
-        console.log(err)
         res.status(500).json({error:'Internal Server Error'})
     }
 }
@@ -44,7 +33,7 @@ supplierController.approveSupplier = async(req,res)=>{
 
 supplierController.account = async (req,res)=>{
     try {
-        const supplier = await Supplier.findOne({userId:req.user.id})//.populate('userId',['username','email','mobileNumber']).select({password:0})
+        const supplier = await Supplier.findOne({userId:req.user.id})
         res.json(supplier)
     } catch(err){
         console.log(err)
