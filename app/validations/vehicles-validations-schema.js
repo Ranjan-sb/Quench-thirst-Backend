@@ -1,12 +1,4 @@
 const vehicleValidationSchema={
-  // supplierId:{
-  //   notEmpty:{
-  //     errorMessage:'supplier Id is required'
-  //   },
-  //   isMongoId:{
-  //     errorMessage:'valid Id is required'
-  //   }
-  // },
   vehicleNumber:{
     notEmpty:{
       errorMessage:'vehicle number is required'
@@ -24,15 +16,6 @@ const vehicleValidationSchema={
     },
     isMongoId:{
       errorMessage:'valid Id is required'
-    }
-  },
-  capacity:{
-    notEmpty:{
-      errorMessage:'capacity is required'
-    },
-    isIn:{
-      options:[['small(6000L)','medium(8000L)','large(10000L)']],
-      errorMessage:'capacity should be amongst the options'
     }
   }
 }

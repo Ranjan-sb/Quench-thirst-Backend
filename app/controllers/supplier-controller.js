@@ -18,13 +18,8 @@ supplierController.list = async (req,res)=>{
 supplierController.approveSupplier = async(req,res)=>{
     const {id} = req.params
     try{
-        const supplier = await Supplier.findById(id)
-        if(!supplier){
-            return res.status(404).json({ message: 'Supplier not found' }) 
-        }
-        const supplierNew = await Supplier.findByIdAndUpdate(id,{$set :{isApproved:true}},{new:true})
-        res.json(supplierNew)
-        
+        const supplier = await Supplier.findByIdAndUpdate(id,{$set :{isApproved:true}},{new:true})
+        res.json(supplier)
     } catch(error){
         console.log(error)
         res.status(500).json({error:'Internal server error'})

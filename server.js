@@ -39,24 +39,17 @@ app.post('/api/users/verifyEmail',checkSchema(verifyEmailAndOtpValidationSchema)
 //route for forgot password -> mail and otp and new password 
 app.put('/api/users/forgotPassword', checkSchema(forgotPasswordValidation),usersController.forgotPassword )
 
-//route for updating password 
-// app.put("/api/users/updatePassword",authenticateUser,checkSchema(updatingPassword),usersController.updatePassword)
-
 //for reverification of email while login if not verified and for forgot password mail to verify mail
 app.post('/api/users/reverifyEmail',checkSchema(resendOTPEmailValidationSchema) ,usersController.resendOTP)
 
 //route to login
 app.post('/api/users/login',checkSchema(loginValidationSchema),usersController.login)
 
-//route to update user
-//app.put('/api/users', authenticateUser , usersController.update)
-
 //route to delete user
 app.delete('/api/users/:id', authenticateUser, usersController.remove)
 
 
 //route to see particular user or account
-//app.post('/api/users/account', authenticateUser, usersController.account)
 app.get('/api/users/account',authenticateUser,usersController.account)
 
 //route to get all users
@@ -71,17 +64,14 @@ app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),supplierC
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
 
-//route to list suppliers who are yet to be approved by admin
-//app.get('/api/suppliers/yetToApprove',authenticateUser,authorizeUser(['admin']),supplierController.yetToApprove)
-
 //route to approve supplier by admin
-app.put('/api/users/:id/approve',authenticateUser,authorizeUser(['admin']),supplierController.approveSupplier)
+app.put('/api/suppliers/:id/approve',authenticateUser,authorizeUser(['admin']),supplierController.approveSupplier)
 
 // route to get particular supplier
 app.get('/api/suppliers/account',authenticateUser,supplierController.account)
 
 //route to delete supplier
-app.delete('/api/suppliers/:id',authenticateUser,supplierController.remove)
+app.delete('/api/suppliers/:id',authenticateUser,authorizeUser(['admin']),supplierController.remove)
 
 //vehicle type module ------------------------------------------------------------------------->
 
