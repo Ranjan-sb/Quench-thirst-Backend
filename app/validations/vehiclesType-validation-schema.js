@@ -1,5 +1,3 @@
-const VehicleType=require('../models/vehicleType-model')
-
 const vehicleTypeValidation={
   name:{
     notEmpty:{
@@ -10,29 +8,13 @@ const vehicleTypeValidation={
       errorMessage:'name should be tractor, tipper or lorry'
     }
   },
-  // capacity:{
-  //   notEmpty:{
-  //     errorMessage:'capacity is required'
-  //   },
-  //   isIn:{
-  //     options:[[6000,8000,12000]],
-  //     errorMessage:'capacity should be 6000L or 8000L or 12000L'
-  //   }
-  // },
-  quantity:{
+  capacity:{
     notEmpty:{
-      errorMessage:'quantity cannot be zero or empty'
+      errorMessage:'capacity is required'
     },
-    isNumeric:{ 
-      errorMessage:'quantity should be in numbers'
-    },
-    custom:{
-      options:(value)=>{
-        if(value<=0){
-          throw new Error('quantity should be greater than 0')
-        }
-        return true
-      }
+    isIn:{
+      options:[[6000,8000,12000]],
+      errorMessage:'capacity should be 6000L or 8000L or 12000L'
     }
   },
   prices:{
