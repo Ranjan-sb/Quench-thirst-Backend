@@ -76,7 +76,7 @@ app.delete('/api/suppliers/:id',authenticateUser,authorizeUser(['admin']),suppli
 //vehicle type module ------------------------------------------------------------------------->
 
 //route to list all vehicleType
-app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.list)
+app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier','customer']),vehicleTypeController.list)
 
 //route to list particular vehicleType
 app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.particularType)
