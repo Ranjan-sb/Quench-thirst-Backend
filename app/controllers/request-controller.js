@@ -31,13 +31,13 @@ requestController.create=async(req,res)=>{
                         //isPointWithinRadius({latitude:42.24222,longitude:12.32452},{latitude:20.24222,longitude:11.32452},radius in m )
                         //isPointWithinRadius(point,center point,distance from center point)
         })          
-    console.log(filteredSuppliers)
+    //console.log(filteredSuppliers)
     if(filteredSuppliers){
       let emailArr = []
       for(let i = 0; i < filteredSuppliers.length; i++){
         emailArr.push(filteredSuppliers[i].userId)
       }
-      console.log("emailArr",emailArr)
+      //console.log("emailArr",emailArr)
       const  newData = emailArr.map((ele)=>({
         supplierId : ele._id,
         email: ele.email
@@ -108,7 +108,7 @@ requestController.accepted = async(req,res)=>{
     const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId').populate('customerId')
     const lineItemsArray = []
     lineItemsArray.push({'quantity' : request.quantity,
-    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})
+    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId``})//._id
     //console.log(lineItemsArray)
     const user = await User.findOne({_id : request.customerId})
     const order = new Order()

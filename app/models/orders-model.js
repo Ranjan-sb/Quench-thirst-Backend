@@ -26,10 +26,6 @@ const orderSchema = new Schema({
     type : String,
     default : "incomplete"
   },
-  // assignTo : {
-  //   type : Schema.Types.ObjectId,
-  //   ref : 'Vehicle'
-  // },
   requestId : {
     type : Schema.Types.ObjectId,
     ref : 'Request'

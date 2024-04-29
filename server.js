@@ -135,8 +135,7 @@ app.get('/api/orders/customer',authenticateUser,authorizeUser(['customer']),orde
 //------------------------------------------------------------------------------------------------------->
 
 //route to make payment
-app.post('/api/payment/:id',authenticateUser,authorizeUser(['customer']),paymentController.create)
-
+app.post('/api/create-checkout-session',paymentController.create)
 app.put('/api/payments/:id/success',paymentController.successUpdate)
 app.put('/api/payments/:id/failed',paymentController.failedUpdate)
 
