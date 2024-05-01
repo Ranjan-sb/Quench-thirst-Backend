@@ -4,24 +4,16 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 //const _ = require('lodash')
 const paymentController = {}
 
-// orderId:{
-//     type : Schema.Types.ObjectId,
-//     ref : 'Order'
-//   },
-//   transactionId : Schema.Types.ObjectId,
-//   paymentStatus : String,
-//   paymentType : String,
-//   amount : Number
-
 paymentController.create = async(req,res)=>{
     // const errors = validationResult(req)
     // if(!errors.isEmpty()){
     //     return res.status(400).json({errors:errors.array()})
     // }
     const body = req.body
-    const orderId = req.params.id
+    const orderId = req.query.orderId
     try{
         const order = await Order.findById(orderId)
+        console.log(orderId)
         //create a customer
         const customer = await stripe.customers.create({
             name: "Testing",
@@ -49,7 +41,7 @@ paymentController.create = async(req,res)=>{
             }],
             mode:"payment",
             success_url:"http://localhost:3000/success",
-            cancel_url: 'http://localhost:3000/cancel',
+            cancel_url: 'http://localhost:3000/failure',
             customer : customer.id
         })
         
@@ -70,8 +62,13 @@ paymentController.create = async(req,res)=>{
 paymentController.successUpdate=async(req,res)=>{
     try{
         const id = req.params.id
-        const body = pick(req.body,['paymentStatus'])
-        const updatedPayment = await Payment.findOneAndUpdate({transactionId:id}, body) 
+        const paymentRecord = await Payment.findOne({transactionId:id})
+        if(!paymentRecord){
+            return res.status(404).json({error:'record not found'})
+        }
+        //const body = pick(req.body,['paymentStatus'])
+        const updatedPayment = await Payment.findOneAndUpdate({transactionId:id}, {$set:{paymentStatus:'Successful'}},{new:true})
+        const updatedOrder = await Order.findOneAndUpdate({_id:updatedPayment.orderId},{$set:{status:'completed'}},{new:true})
         res.json(updatedPayment)
     }catch(err){
         console.log(err)
@@ -83,7 +80,7 @@ paymentController.failedUpdate=async(req,res)=>{
     try{
         const id = req.params.id
         const body = pick(req.body,['paymentStatus'])
-        const updatedPayment = await Payment.findOneAndUpdate({transactionId:id}, body) 
+        const updatedPayment = await Payment.findOneAndUpdate({transactionId:id},{$set:{paymentStatus:"Failed"}},{new:true}) 
         res.json(updatedPayment)
     }catch(err){
         console.log(err)
