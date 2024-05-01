@@ -102,7 +102,6 @@ requestController.list = async(req,res)=>{
 
 //code for updating request to be written if necessary
 
-
 requestController.accepted = async(req,res)=>{
   try{
     const id = req.params.id
@@ -112,6 +111,7 @@ requestController.accepted = async(req,res)=>{
     'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})
     console.log("vehicleTypeId",request.vehicleTypeId._id)
     console.log(lineItemsArray)
+    
     const user = await User.findOne({_id : request.customerId})
     const order = new Order()
     order.supplierId = req.user.id
