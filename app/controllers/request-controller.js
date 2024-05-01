@@ -31,13 +31,13 @@ requestController.create=async(req,res)=>{
                         //isPointWithinRadius({latitude:42.24222,longitude:12.32452},{latitude:20.24222,longitude:11.32452},radius in m )
                         //isPointWithinRadius(point,center point,distance from center point)
         })          
-    console.log(filteredSuppliers)
+    //console.log(filteredSuppliers)
     if(filteredSuppliers){
       let emailArr = []
       for(let i = 0; i < filteredSuppliers.length; i++){
         emailArr.push(filteredSuppliers[i].userId)
       }
-      console.log("emailArr",emailArr)
+      //console.log("emailArr",emailArr)
       const  newData = emailArr.map((ele)=>({
         supplierId : ele._id,
         email: ele.email
@@ -91,7 +91,7 @@ requestController.create=async(req,res)=>{
 
 requestController.list = async(req,res)=>{
   try{
-    const requests = await Request.find({customerId:req.user.id})
+    const requests = await Request.find({customerId:req.user.id}).populate('vehicleTypeId',['name'])
     res.json(requests)
 
   } catch(error){
@@ -162,7 +162,7 @@ requestController.accepted = async(req,res)=>{
 
 requestController.getRequestsOfSupplier = async(req,res)=>{
   try{
-    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId : null })
+    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId : null }).populate('vehicleTypeId',['name'])
     //console.log(req.user.id)
     //console.log(requests)
     res.json(requests)
