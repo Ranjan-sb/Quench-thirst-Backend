@@ -5,7 +5,7 @@ const {Schema, model} = mongoose
 const orderSchema = new Schema({
   supplierId : {
     type : Schema.Types.ObjectId,
-    ref : 'Supplier'
+    ref : 'User'
   },
   customerId : {
     type : Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const orderSchema = new Schema({
     orderType : String,
     purpose : String,
     vehicleTypeId : {
-      type : String,
+      type : Schema.Types.ObjectId,
       ref : 'VehicleType'
     }
   }],

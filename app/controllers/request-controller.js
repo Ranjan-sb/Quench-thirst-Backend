@@ -91,7 +91,7 @@ requestController.create=async(req,res)=>{
 
 requestController.list = async(req,res)=>{
   try{
-    const requests = await Request.find({customerId:req.user.id})
+    const requests = await Request.find({customerId:req.user.id}).populate('vehicleTypeId',['name'])
     res.json(requests)
   } catch(error){
     console.log(error)
@@ -108,7 +108,7 @@ requestController.accepted = async(req,res)=>{
     const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId').populate('customerId')
     const lineItemsArray = []
     lineItemsArray.push({'quantity' : request.quantity,
-    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId``})//._id
+    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})//._id
     //console.log(lineItemsArray)
     const user = await User.findOne({_id : request.customerId})
     const order = new Order()
@@ -159,7 +159,7 @@ requestController.accepted = async(req,res)=>{
 
 requestController.getRequestsOfSupplier = async(req,res)=>{
   try{
-    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId : null })
+    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId : null }).populate('vehicleTypeId',['name'])
     //console.log(req.user.id)
     //console.log(requests)
     res.json(requests)
