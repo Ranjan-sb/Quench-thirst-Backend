@@ -5,6 +5,7 @@ const Supplier = require('../models/supplier-model')
 const Order = require('../models/orders-model')
 const User = require('../models/user-model')
 const nodemailer = require('nodemailer')
+const { default: axios } = require('axios')
 
 const requestController={}
 
@@ -81,7 +82,8 @@ requestController.create=async(req,res)=>{
       request.orderDate=body.orderDate  //from postman- yyyy-mm-dd
     }
     await request.save()
-    res.status(201).json(request) 
+    const requestNew = await Request.findById(request._id).populate('vehicleTypeId')
+    res.status(201).json(requestNew) 
 
   }catch(error){
     console.log(error)
