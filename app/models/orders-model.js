@@ -17,7 +17,7 @@ const orderSchema = new Schema({
     orderType : String,
     purpose : String,
     vehicleTypeId : {
-      type : String,
+      type : Schema.Types.ObjectId,
       ref : 'VehicleType'
     }
   }],

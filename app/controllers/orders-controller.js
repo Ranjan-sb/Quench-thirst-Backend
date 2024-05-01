@@ -42,7 +42,7 @@ const ordersController = {}
 
 ordersController.listOrderSupplier = async(req,res)=>{
     try{
-        const orders = await Order.find({supplierId:req.user.id})
+        const orders = await Order.find({supplierId:req.user.id}).populate('customerId')
         res.json(orders)
     } catch(error){
         console.log(error)
@@ -52,9 +52,19 @@ ordersController.listOrderSupplier = async(req,res)=>{
 
 ordersController.listOrderCustomer = async(req,res)=>{
     try{
-        const orders = await Order.find({customerId:req.user.id})
-        res.json(orders)
-    } catch(error){
+        const orders = await Order.find({customerId:req.user.id}).populate('customerId').populate({
+            path: 'lineItems',
+            populate: {
+                path: 'vehicleTypeId',
+                model: 'VehicleType'
+            }
+        });
+        console.log("orders 1-",orders[0].lineItems)
+        if(orders){
+            console.log(orders.lineItems)
+        }
+        res.json(orders)    
+    }catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})
     }
