@@ -58,8 +58,9 @@ supplierController.create = async(req,res)=>{
            return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
         }
         const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
-        // supplier.location.coordinates = reverseLatLon(location)
-        supplier.location.coordinates =location
+        supplier.location.coordinates = reverseLatLon(location)
+        // supplier.location.coordinates =location
+        console.log("suppliers reversed coordinates-",supplier.location.coordinates)
 
         supplier.userId = req.user.id
         await supplier.save()
