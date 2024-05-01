@@ -62,7 +62,7 @@ app.get('/api/users',authenticateUser,authorizeUser(['admin']),usersController.r
 app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),supplierController.create)
 
 //route to list suppliers
-app.get('/api/suppliers',authenticateUser,authorizeUser(['admin']),supplierController.list)
+app.get('/api/suppliers',authenticateUser,authorizeUser(['admin','customer']),supplierController.list)
 
 //route to approve supplier by admin
 app.put('/api/suppliers/:id/approve',authenticateUser,authorizeUser(['admin']),supplierController.approveSupplier)
@@ -73,6 +73,9 @@ app.get('/api/suppliers/account',authenticateUser,supplierController.account)
 //route to delete supplier
 app.delete('/api/suppliers/:id',authenticateUser,authorizeUser(['admin']),supplierController.remove)
 
+//route for suppliers mapping within the radius
+app.get('/api/suppliers/co',authenticateUser,authorizeUser(['customer','supplier']),supplierController.findByLatAndLng)
+
 //vehicle type module ------------------------------------------------------------------------->
 
 //route to list all vehicleType
@@ -80,6 +83,8 @@ app.get('/api/vehicleType',authenticateUser,authorizeUser(['admin','supplier','c
 
 //route to list particular vehicleType
 app.get('/api/vehicleType/:id',authenticateUser,authorizeUser(['admin','supplier']),vehicleTypeController.particularType)
+
+
 
 //route to create vehicleType
 app.post('/api/vehicleType',authenticateUser,authorizeUser(['admin']),checkSchema(vehicleTypeValidation),vehicleTypeController.create)
@@ -106,6 +111,7 @@ app.put('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),checkSc
 
 //route to delete vehicle
 app.delete('/api/vehicles/:id',authenticateUser,authorizeUser(['supplier']),vehicleController.remove)
+
 
 //------------------------------------------------------------------------------------------------------------------>
 

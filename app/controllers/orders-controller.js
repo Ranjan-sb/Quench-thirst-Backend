@@ -28,7 +28,12 @@ ordersController.listOrderCustomer = async(req,res)=>{
                 model: 'VehicleType'
             }
         });
-        res.json(orders)
+
+        console.log("orders 1-",orders[0].lineItems)
+        if(orders){
+            console.log(orders.lineItems)
+        }
+        res.json(orders)    
     } catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})

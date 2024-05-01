@@ -1,7 +1,14 @@
+const User = require('../models/user-model')
 const Supplier = require('../models/supplier-model')
 const axios = require('axios')
 const _ = require("lodash")
 const { validationResult } = require('express-validator')
+const {isPointWithinRadius} = require('geolib')
+
+const reverseLatLon=(arr)=>{
+    return [arr[1], arr[0]]
+}
+
 
 const supplierController = {}
 
@@ -51,7 +58,9 @@ supplierController.create = async(req,res)=>{
            return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
         }
         const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
-        supplier.location.coordinates = location
+        // supplier.location.coordinates = reverseLatLon(location)
+        supplier.location.coordinates =location
+
         supplier.userId = req.user.id
         await supplier.save()
         res.status(201).json(supplier)
@@ -72,6 +81,45 @@ supplierController.remove = async (req, res) => {
     } catch (err) {
         console.log(err)
         res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
+
+const transformToObj = (coordinates) => {
+    return { latitude: coordinates[0], longitude: coordinates[1] }
+}
+
+supplierController.findByLatAndLng=async(req,res)=>{
+    
+    // const {lat, lon}= req.query
+    const radius=10
+    // const centerCoordinates={
+    //     latitude:lat,
+    //     longitude: lon
+    // }
+    // console.log("1-",centerCoordinates)
+    try{
+        const customer=await User.findById(req.user.id)
+        if(customer){
+            const centerCoordinates=reverseLatLon(customer.location.coordinates)
+            console.log("customer center-",centerCoordinates)
+
+            const suppliersLocation= await Supplier.find({isApproved:true})
+                const filteredSuppliers=suppliersLocation.filter((ele)=>{
+                console.log("2-",ele.location.coordinates)
+                // const r={
+                //     latitude: parseFloat(centerCoordinates.latitude),
+                //     longitude: parseFloat(centerCoordinates.longitude)
+                // }
+                // console.log("3-",r)
+                return isPointWithinRadius(ele.location.coordinates,centerCoordinates, parseFloat(radius*1000))
+            })
+            console.log("filteredSuppliers-",filteredSuppliers)
+            res.json(filteredSuppliers)
+        }              
+        
+    }catch(err){
+        console.log(err)
+        res.status(500).json({error:'Internal server error'})
     }
 }
 

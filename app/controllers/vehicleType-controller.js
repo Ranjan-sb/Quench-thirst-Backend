@@ -15,6 +15,7 @@ vehicleTypeController.list = async(req,res)=>{
     }
 }
 
+
 vehicleTypeController.create = async(req,res)=>{
     const errors = validationResult(req)
     if(!errors.isEmpty()){

@@ -27,7 +27,7 @@ requestController.create=async(req,res)=>{
     const suppliers = await Supplier.find().populate('userId',['email','_id'])//.populate('userId',['email'])
     //console.log(suppliers)
     const filteredSuppliers = suppliers.filter(ele=>{
-      return isPointWithinRadius(transformCoordinates(ele.location.coordinates),transformCoordinates(customerCoordinates),searchDistance)
+      return isPointWithinRadius(ele.location.coordinates,transformCoordinates(customerCoordinates),searchDistance)
                         //isPointWithinRadius({latitude:42.24222,longitude:12.32452},{latitude:20.24222,longitude:11.32452},radius in m )
                         //isPointWithinRadius(point,center point,distance from center point)
         })          
@@ -93,6 +93,7 @@ requestController.list = async(req,res)=>{
   try{
     const requests = await Request.find({customerId:req.user.id}).populate('vehicleTypeId',['name'])
     res.json(requests)
+
   } catch(error){
     console.log(error)
     res.status(500).json({error : "Internal Server Error"})
@@ -108,8 +109,9 @@ requestController.accepted = async(req,res)=>{
     const request = await Request.findByIdAndUpdate(id,{$set :{supplierId:req.user.id,status:'accepted'}},{new:true}).populate('vehicleTypeId').populate('customerId')
     const lineItemsArray = []
     lineItemsArray.push({'quantity' : request.quantity,
-    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})//._id
-    //console.log(lineItemsArray)
+    'orderType' : request.orderType,'purpose' : request.purpose,'vehicleTypeId' : request.vehicleTypeId})
+    console.log("vehicleTypeId",request.vehicleTypeId._id)
+    console.log(lineItemsArray)
     const user = await User.findOne({_id : request.customerId})
     const order = new Order()
     order.supplierId = req.user.id
@@ -128,6 +130,7 @@ requestController.accepted = async(req,res)=>{
       })
     order.price = totalPrice
     await order.save()
+    
     
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",

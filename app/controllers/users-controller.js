@@ -8,11 +8,18 @@ const User = require('../models/user-model')
 const { validationResult } = require('express-validator')
 const nodemailer = require('nodemailer')
 // const Supplier = require('../models/supplier-model')
+
+function reverseLatLon(arr) {
+    return [arr[1], arr[0]]
+  }
+
 const usersController = {}
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = require('twilio')(accountSid,authToken);
+
+
 
 usersController.sendSMS = async(username,mobileNumber,role)=>{
     let msgOptions = {
@@ -68,6 +75,7 @@ usersController.sendConfirmMail = (recipientMail, recipientUsername, otp) => {
 }
 
 //To register a user to QT App
+
 usersController.register = async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -103,11 +111,13 @@ usersController.register = async (req, res) => {
                 return  res.status(400).json({errors:[{msg:"Invalid address",path:'invalid address'}]})
             }
             const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
-            user.location.coordinates = location
+            // user.location.coordinates =reverseLatLon(location) 
+            user.location.coordinates =location 
+            
         }
         await user.save()
         res.status(201).json(user)
-        //usersController.sendConfirmMail(user.email, user.username)
+        usersController.sendConfirmMail(user.email, user.username)
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: "Internal Server Error" })
