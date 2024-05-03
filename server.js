@@ -27,6 +27,7 @@ const ordersController = require('./app/controllers/orders-controller')
 const paymentController = require('./app/controllers/payment-controller')
 const vehicleTypeValidation = require('./app/validations/vehiclesType-validation-schema')
 const vehicleValidationSchema = require('./app/validations/vehicles-validations-schema')
+const suppliersValidationSchema = require('./app/validations/suppliers-validations-schema')
 
 
 
@@ -59,7 +60,7 @@ app.get('/api/users',authenticateUser,authorizeUser(['admin']),usersController.r
 //SUPPLIER MODULE------------------------------------------------------------------------------>
 
 //route to create supplier
-app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),supplierController.create)
+app.post('/api/suppliers',authenticateUser,authorizeUser(['supplier']),checkSchema(suppliersValidationSchema),supplierController.create)
 
 //route to list suppliers
 app.get('/api/suppliers',authenticateUser,authorizeUser(['admin','customer']),supplierController.list)

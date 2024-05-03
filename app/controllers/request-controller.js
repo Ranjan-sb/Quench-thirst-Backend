@@ -90,10 +90,26 @@ requestController.create=async(req,res)=>{
 }
 
 requestController.list = async(req,res)=>{
+  const orderTypeSearch=req.query.orderTypeSearch ||''
+  const purposeSearch=req.query.purposeSearch
+  const sortBy=req.query.sortBy || 'orderType'
+  const order=req.query.order || 1
+  let page=req.query.page || 1
+  let limit=req.query.limit || 5
+  console.log("search1-",orderTypeSearch)
+  console.log("search2-",purposeSearch)
+  const sortQuery={}
+  sortQuery[sortBy]=order==='asc' ? 1 : -1
+  page=parseInt(page) 
+  limit=parseInt(limit)
   try{
-    const requests = await Request.find({customerId:req.user.id}).populate('vehicleTypeId',['name'])
+    const requests = await Request
+                              .find({customerId:req.user.id, orderType:{$regex:orderTypeSearch, $options:'i'},purpose:{$regex:purposeSearch, $options:'i'}})
+                              .sort(sortQuery)
+                              .skip((page - 1) * limit)
+                              .limit(limit)
+                              .populate('vehicleTypeId', ['name']);
     res.json(requests)
-
   } catch(error){
     console.log(error)
     res.status(500).json({error : "Internal Server Error"})

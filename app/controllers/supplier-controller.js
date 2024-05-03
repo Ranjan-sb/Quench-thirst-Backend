@@ -13,9 +13,24 @@ const reverseLatLon=(arr)=>{
 const supplierController = {}
 
 supplierController.list = async (req,res)=>{
+    const search=req.query.search ||''
+    const sortBy=req.query.sortBy || ''
+    const order=req.query.order || 1
+    let page=req.query.page || 1
+    let limit=req.query.limit || 5
+    // const searchQuery={username:{$regex:search, $options:'i'}}
+    const sortQuery={}
+    sortQuery[sortBy]=order==='asc' ? 1 : -1
+    page=parseInt(page) 
+    limit=parseInt(limit)
     try{
         //const supplier = await Supplier.find({isApproved : true}).sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
-        const supplier = await Supplier.find().sort({createdAt:-1}).populate('userId',['username','email','mobileNumber'])
+        const supplier = await Supplier.find()
+                                        // .sort(sortQuery)
+                                        .skip((page - 1)*limit)
+                                        .limit(limit)
+                                        .populate('userId',['username','email','mobileNumber'])
+        console.log('suppliers-',supplier)
         res.json(supplier)
     } catch(err){
         res.status(500).json({error:'Internal Server Error'})
