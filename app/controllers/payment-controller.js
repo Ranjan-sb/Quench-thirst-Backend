@@ -21,7 +21,7 @@ paymentController.create = async(req,res)=>{
                 line1: 'India',
                 postal_code: '570018',
                 city: 'Mysore',
-                state: 'Karnataka',
+                state: 'Kar',
                 country: 'US',
             },
         })

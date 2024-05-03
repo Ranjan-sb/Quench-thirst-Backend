@@ -1,11 +1,10 @@
 const { validationResult } = require('express-validator')
 const Order = require('../models/orders-model')
-const Request = require('../models/request-model')
 const ordersController = {}
 
 ordersController.listOrderSupplier = async(req,res)=>{
     try{
-        const orders = await Order.find({supplierId:req.user.id}).populate('customerId').populate({
+        const orders = await Order.find({supplierId:req.user.id}).populate('supplierId').populate('customerId').populate({
             path: 'lineItems',
             populate: {
                 path: 'vehicleTypeId',
@@ -21,7 +20,7 @@ ordersController.listOrderSupplier = async(req,res)=>{
 
 ordersController.listOrderCustomer = async(req,res)=>{
     try{
-        const orders = await Order.find({customerId:req.user.id}).populate('customerId').populate({
+        const orders = await Order.find({customerId:req.user.id}).populate('supplierId').populate('customerId').populate({
             path: 'lineItems',
             populate: {
                 path: 'vehicleTypeId',
@@ -29,7 +28,7 @@ ordersController.listOrderCustomer = async(req,res)=>{
             }
         });
 
-        console.log("orders 1-",orders[0].lineItems)
+        //console.log("orders 1-",orders[0].lineItems)
         if(orders){
             console.log(orders.lineItems)
         }
@@ -37,6 +36,16 @@ ordersController.listOrderCustomer = async(req,res)=>{
     } catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})
+    }
+}
+
+ordersController.setFulfilled = async(req,res)=>{
+    try{
+        const id = req.params.id
+        const order = await Order.findOneAndUpdate({_id:id, supplierId:req.user.id},{$set :{isFulfilled:true}},{new:true})
+        res.json(order)
+    } catch(error){
+        console.log(error)
     }
 }
 module.exports = ordersController

@@ -20,7 +20,7 @@ supplierController.list = async (req,res)=>{
     } catch(err){
         res.status(500).json({error:'Internal Server Error'})
     }
-}
+} 
 
 supplierController.approveSupplier = async(req,res)=>{
     const {id} = req.params

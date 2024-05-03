@@ -29,6 +29,10 @@ const orderSchema = new Schema({
   requestId : {
     type : Schema.Types.ObjectId,
     ref : 'Request'
+  },
+  isFulfilled : {
+    type : Boolean,
+    default : false
   }
 },{timestamps:true})
 

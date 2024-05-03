@@ -23,7 +23,7 @@ vehicleController.create = async(req,res)=>{
 
 vehicleController.list = async(req,res)=>{
     try{
-        const vehicles = await Vehicle.find({supplierId:req.user.id}).sort({createdAt:-1}).populate('vehicleTypeId',['name','prices.purpose','prices.price'])
+        const vehicles = await Vehicle.find({supplierId:req.user.id}).sort({createdAt:-1}).populate('vehicleTypeId',['name'])
         console.log(vehicles)
         res.json(vehicles)
     } catch(error){

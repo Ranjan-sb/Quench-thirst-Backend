@@ -138,6 +138,9 @@ app.get('/api/orders/supplier',authenticateUser,authorizeUser(['supplier']),orde
 //route to list orders of customer
 app.get('/api/orders/customer',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
 
+//route to set isFulfilled by Supplier
+app.put('/api/orders/:id/fulfilled',authenticateUser,authorizeUser(['supplier']),ordersController.setFulfilled)
+
 //------------------------------------------------------------------------------------------------------->
 
 //route to make payment
