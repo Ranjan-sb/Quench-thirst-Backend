@@ -41,6 +41,16 @@ const userRegisterSchema = {
     mobileNumber : {
         notEmpty : {
             errorMessage : 'mobileNumber is a required field'
+        },
+        custom:{
+            options:async function(value){
+                const user=await User.findOne({mobileNumber:value})
+                if(!user){
+                    return true 
+                }else{
+                    throw new Error("mobile number already exist")
+                }
+            }
         }
     },
     role : {
