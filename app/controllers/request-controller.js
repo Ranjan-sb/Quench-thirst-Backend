@@ -215,6 +215,34 @@ requestController.remove = async (req, res) => {
   }
 }
 
+requestController.reject = async (req, res) => {
+  const requestId = req.params.id;
+  const supplierId = req.user.id; // Assuming you have authentication middleware to get the user ID
+
+  try {
+    const request = await Request.findById(requestId);
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    // Check if the supplier is assigned to the request
+    const supplierIndex = request.suppliers.findIndex(supplier => supplier.supplierId.toString() === supplierId);
+    if (supplierIndex === -1) {
+      return res.status(403).json({ error: 'You are not assigned to this request' });
+    }
+
+    // Remove the supplier from the suppliers list
+    request.suppliers.splice(supplierIndex, 1);
+    await request.save();
+
+    res.json({ message: 'Request rejected successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
 module.exports = requestController
 
 
