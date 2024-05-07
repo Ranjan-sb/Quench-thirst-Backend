@@ -30,7 +30,7 @@ supplierController.list = async (req,res)=>{
                                         //.skip((page - 1)*limit)
                                         //.limit(limit)
                                         .populate('userId',['username','email','mobileNumber'])
-        console.log('suppliers-',supplier)
+        // console.log('suppliers-',supplier)
         res.json(supplier)
     } catch(err){
         res.status(500).json({error:'Internal Server Error'})
@@ -51,6 +51,7 @@ supplierController.approveSupplier = async(req,res)=>{
 supplierController.account = async (req,res)=>{
     try {
         const supplier = await Supplier.findOne({userId:req.user.id})
+        console.log("supplier_details-", supplier)
         res.json(supplier)
     } catch(err){
         console.log(err)
@@ -75,7 +76,7 @@ supplierController.create = async(req,res)=>{
         const location = [mapResponse.data.features[0].properties.lon,mapResponse.data.features[0].properties.lat]
         supplier.location.coordinates = reverseLatLon(location)
         // supplier.location.coordinates =location
-        console.log("suppliers reversed coordinates-",supplier.location.coordinates)
+        // console.log("suppliers reversed coordinates-",supplier.location.coordinates)
 
         supplier.userId = req.user.id
         await supplier.save()
@@ -117,11 +118,13 @@ supplierController.findByLatAndLng=async(req,res)=>{
         const customer=await User.findById(req.user.id)
         if(customer){
             const centerCoordinates=reverseLatLon(customer.location.coordinates)
+
             //console.log("customer center-",centerCoordinates)
 
             const suppliersLocation= await Supplier.find({isApproved:true})
                 const filteredSuppliers=suppliersLocation.filter((ele)=>{
                 //console.log("2-",ele.location.coordinates)
+                  
                 // const r={
                 //     latitude: parseFloat(centerCoordinates.latitude),
                 //     longitude: parseFloat(centerCoordinates.longitude)
@@ -129,7 +132,9 @@ supplierController.findByLatAndLng=async(req,res)=>{
                 // console.log("3-",r)
                 return isPointWithinRadius(ele.location.coordinates,centerCoordinates, parseFloat(radius*1000))
             })
+
             //console.log("filteredSuppliers-",filteredSuppliers)
+
             res.json(filteredSuppliers)
         }              
         

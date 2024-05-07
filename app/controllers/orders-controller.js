@@ -30,7 +30,7 @@ ordersController.listOrderCustomer = async(req,res)=>{
 
         //console.log("orders 1-",orders[0].lineItems)
         if(orders){
-            console.log(orders.lineItems)
+            console.log("order.lineitems:",orders.lineItems)
         }
         res.json(orders)    
     } catch(error){

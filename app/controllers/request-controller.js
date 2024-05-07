@@ -114,6 +114,7 @@ requestController.create = async (req, res) => {
     //request.customerEmail = user1.email
     request.customerAddress = `${user1.building} ${user1.locality} ${user1.city} ${user1.pinCode}`
     const customerCoordinates = user1.location.coordinates
+
     //console.log("customer-cor", customerCoordinates)
     const suppliers = await Supplier.find({ isApproved: true }).populate('userId', ['email', '_id'])//.populate('userId',['email'])
     console.log("1-",suppliers)
@@ -201,27 +202,44 @@ requestController.create = async (req, res) => {
   }
 }
 
-requestController.list = async (req, res) => {
-  const orderTypeSearch = req.query.orderTypeSearch || ''
-  const purposeSearch = req.query.purposeSearch
-  const sortBy = req.query.sortBy || 'orderType'
-  const order = req.query.order || 1
-  let page = req.query.page || 1
-  let limit = req.query.limit || 5
-  console.log("search1-", orderTypeSearch)
-  console.log("search2-", purposeSearch)
-  const sortQuery = {}
-  sortQuery[sortBy] = order === 'asc' ? 1 : -1
-  page = parseInt(page)
-  limit = parseInt(limit)
-  try {
+requestController.list = async(req,res)=>{
+  const orderTypeSearch=req.query.orderTypeSearch ||''
+  const purposeSearch=req.query.purposeSearch ||''
+  const sortBy=req.query.sortBy || 'orderType'
+  const order=req.query.order || 1
+  let page=req.query.page || 1
+  let limit=req.query.limit || 5
+  // console.log("search1-",orderTypeSearch)
+  // console.log("search2-",purposeSearch)
+  const sortQuery={}
+  sortQuery[sortBy]=order==='asc' ? 1 : -1
+  page=parseInt(page) 
+  limit=parseInt(limit)
+  try{
+    const totalCount= await Request.countDocuments({
+      customerId:req.user.id,
+      orderType:{$regex:orderTypeSearch, $options:'i'},
+      purpose:{$regex:purposeSearch, $options:'i'}
+    })
+
+    const totalPages=Math.ceil(totalCount/limit)
+
     const requests = await Request
-      .find({ customerId: req.user.id })//, orderType:{$regex:orderTypeSearch, $options:'i'},purpose:{$regex:purposeSearch, $options:'i'}})
-      // .sort(sortQuery)
-      // .skip((page - 1) * limit)
-      // .limit(limit)
-      .populate('vehicleTypeId', ['name'])
-      .populate('customerId',['email'])
+                              .find({
+                                customerId:req.user.id, 
+                                orderType:{$regex:orderTypeSearch, $options:'i'},
+                                purpose:{$regex:purposeSearch, $options:'i'}})
+                              .sort(sortQuery)
+                              .skip((page - 1) * limit)
+                              .limit(limit)
+                              .populate('vehicleTypeId', ['name']);
+    // res.json(
+    //   {
+    //     requests:requests,
+    //     totalPages:totalPages
+    //   }
+    // )
+
     res.json(requests)
   } catch (error) {
     console.log(error)
