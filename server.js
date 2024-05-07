@@ -131,6 +131,9 @@ app.get('/api/requests',authenticateUser,authorizeUser(['customer']),requestCont
 //route to delete requests
 app.delete('/api/requests/:id',authenticateUser,authorizeUser(['customer']),requestController.remove)
 
+//route to reject a request by particular supplier
+app.put('/api/requests/:id/reject',authenticateUser,authorizeUser(['supplier']),requestController.reject)
+
 //------------------------------>
 
 //route to list orders of supplier
