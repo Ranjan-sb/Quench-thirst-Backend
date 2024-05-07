@@ -38,7 +38,7 @@ async function deleteRequestsAndNotify() {
         subject: "Request Deleted", // Subject line
         html: html, // html body
       });
-      console.log("Mail sent to:",user.email)
+      console.log("Mail sent to:", user.email)
       // Delete the request from the database
       await Request.findByIdAndDelete(request._id);
     }
@@ -106,7 +106,7 @@ requestController.create = async (req, res) => {
   const body = req.body
   try {
     const request = new Request(body)
-    const searchDistance = 10*1000
+    const searchDistance = 10 * 1000
     const transformCoordinates = (coordinates) => {
       return { latitude: coordinates[1], longitude: coordinates[0] }
     }
@@ -117,7 +117,7 @@ requestController.create = async (req, res) => {
 
     //console.log("customer-cor", customerCoordinates)
     const suppliers = await Supplier.find({ isApproved: true }).populate('userId', ['email', '_id'])//.populate('userId',['email'])
-    console.log("1-",suppliers)
+    console.log("1-", suppliers)
     const filteredSuppliers = suppliers.filter(ele => {
       const transformedSupplierCoordinates = {
         latitude: ele.location.coordinates[0],
@@ -183,15 +183,8 @@ requestController.create = async (req, res) => {
     }
     await request.save()
 
-     // Start the deletion process
-     startDeletionProcess();
-
-
-    // // Start the cron job if it's not already started
-    // if (!startCronJob.isRunning) {
-    //   startCronJob();
-    //   startCronJob.isRunning = true;
-    // }
+    // Start the deletion process
+    startDeletionProcess();
 
     const requestNew = await Request.findById(request._id).populate('vehicleTypeId')
     res.status(201).json(requestNew)
@@ -202,37 +195,39 @@ requestController.create = async (req, res) => {
   }
 }
 
-requestController.list = async(req,res)=>{
-  const orderTypeSearch=req.query.orderTypeSearch ||''
-  const purposeSearch=req.query.purposeSearch ||''
-  const sortBy=req.query.sortBy || 'orderType'
-  const order=req.query.order || 1
-  let page=req.query.page || 1
-  let limit=req.query.limit || 5
+requestController.list = async (req, res) => {
+  const orderTypeSearch = req.query.orderTypeSearch || ''
+  const purposeSearch = req.query.purposeSearch || ''
+  const sortBy = req.query.sortBy || 'orderType'
+  const order = req.query.order || 1
+  let page = req.query.page || 1
+  let limit = req.query.limit || 10
   // console.log("search1-",orderTypeSearch)
   // console.log("search2-",purposeSearch)
-  const sortQuery={}
-  sortQuery[sortBy]=order==='asc' ? 1 : -1
-  page=parseInt(page) 
-  limit=parseInt(limit)
-  try{
-    const totalCount= await Request.countDocuments({
-      customerId:req.user.id,
-      orderType:{$regex:orderTypeSearch, $options:'i'},
-      purpose:{$regex:purposeSearch, $options:'i'}
+  const sortQuery = {}
+  sortQuery[sortBy] = order === 'asc' ? 1 : -1
+  page = parseInt(page)
+  limit = parseInt(limit)
+  try {
+    const totalCount = await Request.countDocuments({
+      customerId: req.user.id,
+      orderType: { $regex: orderTypeSearch, $options: 'i' },
+      purpose: { $regex: purposeSearch, $options: 'i' }
     })
 
-    const totalPages=Math.ceil(totalCount/limit)
+    const totalPages = Math.ceil(totalCount / limit)
 
     const requests = await Request
-                              .find({
-                                customerId:req.user.id, 
-                                orderType:{$regex:orderTypeSearch, $options:'i'},
-                                purpose:{$regex:purposeSearch, $options:'i'}})
-                              .sort(sortQuery)
-                              .skip((page - 1) * limit)
-                              .limit(limit)
-                              .populate('vehicleTypeId', ['name']);
+      .find({
+        customerId: req.user.id,
+        status: 'pending',
+        orderType: { $regex: orderTypeSearch, $options: 'i' },
+        purpose: { $regex: purposeSearch, $options: 'i' }
+      })
+      .sort(sortQuery)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('vehicleTypeId', ['name']);
     // res.json(
     //   {
     //     requests:requests,
@@ -302,7 +297,15 @@ requestController.accepted = async (req, res) => {
       });
     }
     mailSend().catch(console.error)
-    res.json(request)
+
+    const orderData = await Order.findOne({ requestId: request._id }).populate('supplierId').populate('customerId').populate({
+      path: 'lineItems',
+      populate: {
+        path: 'vehicleTypeId',
+        model: 'VehicleType'
+      }
+    });
+    res.json([request, orderData])
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal Server Error' })
@@ -311,7 +314,7 @@ requestController.accepted = async (req, res) => {
 
 requestController.getRequestsOfSupplier = async (req, res) => {
   try {
-    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId: null }).populate('vehicleTypeId', ['name']).populate('customerId',['email'])
+    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId: null }).populate('vehicleTypeId', ['name']).populate('customerId', ['email'])
     //console.log(req.user.id)
     //console.log(requests)
     res.json(requests)
