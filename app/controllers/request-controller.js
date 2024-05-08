@@ -358,7 +358,7 @@ requestController.reject = async (req, res) => {
     request.suppliers.splice(supplierIndex, 1);
     await request.save();
 
-    res.json({ message: 'Request rejected successfully' });
+    res.json({supplierId :req.user.id,requestId:request._id});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
