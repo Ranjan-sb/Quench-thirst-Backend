@@ -4,7 +4,7 @@ const vehicleTypeValidation={
       errorMessage:'vehicle name is required'
     },
     isIn:{
-      options:[['tractor','tipper','lorry']],
+      options:[['Tractor','Tipper','Lorry']],
       errorMessage:'name should be tractor, tipper or lorry'
     }
   },
