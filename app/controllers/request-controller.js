@@ -248,6 +248,7 @@ requestController.accepted = async (req, res) => {
   try {
     const id = req.params.id
     const request = await Request.findByIdAndUpdate(id, { $set: { supplierId: req.user.id, status: 'accepted' } }, { new: true }).populate('vehicleTypeId').populate('customerId')
+    console.log("reuest=-----",request)
     const lineItemsArray = []
     lineItemsArray.push({
       'quantity': request.quantity,
@@ -273,6 +274,12 @@ requestController.accepted = async (req, res) => {
       }
     })
     order.price = totalPrice
+
+    const from = new Date(request.orderDate).setHours(0,0,0,0)
+    const to = new Date(request.orderDate).setHours(23,59,59,999)
+    const recordCount = await Order.find({supplierId:req.user.id,orderDate:{$gte : from ,$lte :to}}).countDocuments()//,orderDate:request.orderDate,'lineItems[0].purpose':request.purpose
+    order.tokenNumber = recordCount + 1
+
     await order.save()
 
 

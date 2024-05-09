@@ -33,6 +33,10 @@ const orderSchema = new Schema({
   isFulfilled : {
     type : Boolean,
     default : false
+  },
+  tokenNumber : {
+    type : Number,
+    required: false
   }
 },{timestamps:true})
 
