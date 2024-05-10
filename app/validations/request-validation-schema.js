@@ -75,7 +75,7 @@ const requestValidationSchema={
       errorMessage:'purpose is required'
     },
     isIn:{
-      options:[['domestic','commercial','construction','priority']],
+      options:[['Domestic','Commercial','Construction','Priority']],
       errorMessage:'purpose should be selected amongst the options'
     }
   },

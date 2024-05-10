@@ -248,7 +248,7 @@ requestController.accepted = async (req, res) => {
   try {
     const id = req.params.id
     const request = await Request.findByIdAndUpdate(id, { $set: { supplierId: req.user.id, status: 'accepted' } }, { new: true }).populate('vehicleTypeId').populate('customerId')
-    console.log("reuest=-----",request)
+    console.log("reuest =-----",request)
     const lineItemsArray = []
     lineItemsArray.push({
       'quantity': request.quantity,
@@ -268,11 +268,13 @@ requestController.accepted = async (req, res) => {
     lineItemsArray.forEach(item => {
       // Find the price for the specified purpose in the vehicle type prices
       const priceInfo = item.vehicleTypeId.prices.find(price => price.purpose === item.purpose);
+      console.log("---priceInfo----",priceInfo)
       if (priceInfo) {
         // Add the calculated price to the total
         totalPrice += priceInfo.price * item.quantity;
+        console.log("--tp--",totalPrice)
       }
-    })
+    }) 
     order.price = totalPrice
 
     const from = new Date(request.orderDate).setHours(0,0,0,0)
