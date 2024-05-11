@@ -43,6 +43,15 @@ ordersController.setFulfilled = async(req,res)=>{
     try{
         const id = req.params.id
         const order = await Order.findOneAndUpdate({_id:id, supplierId:req.user.id},{$set :{isFulfilled:true}},{new:true})
+       
+        const from = new Date(order.orderDate).setHours(0,0,0,0)
+        const to = new Date(order.orderDate).setHours(23,59,59,999)
+        const searchQuery = {supplierId:req.user.id,orderDate:{$gte : from ,$lte :to}}
+        
+        // const recordCount = await Order.find({supplierId:req.user.id,orderDate:{$gte : from ,$lte :to}}).countDocuments()//,orderDate:request.orderDate,'lineItems[0].purpose':request.purpose
+        // order.tokenNumber = recordCount + 1
+        const orderUpdate = await Order.updateMany(searchQuery,{$set:{currentTokenNumber:order.tokenNumber}},{new:true})
+
         res.json(order)
     } catch(error){
         console.log(error)

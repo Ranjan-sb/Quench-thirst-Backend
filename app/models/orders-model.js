@@ -37,6 +37,10 @@ const orderSchema = new Schema({
   tokenNumber : {
     type : Number,
     required: false
+  },
+  currentTokenNumber : {
+    type : Number,
+    required : false
   }
 },{timestamps:true})
 

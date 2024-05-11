@@ -279,9 +279,13 @@ requestController.accepted = async (req, res) => {
 
     const from = new Date(request.orderDate).setHours(0,0,0,0)
     const to = new Date(request.orderDate).setHours(23,59,59,999)
-    const recordCount = await Order.find({supplierId:req.user.id,orderDate:{$gte : from ,$lte :to}}).countDocuments()//,orderDate:request.orderDate,'lineItems[0].purpose':request.purpose
-    order.tokenNumber = recordCount + 1
-
+    const recordCount = await Order.find({supplierId:req.user.id,orderDate:{$gte : from ,$lte :to}})//.countDocuments()//,orderDate:request.orderDate,'lineItems[0].purpose':request.purpose
+    order.tokenNumber = recordCount.length + 1
+    if(recordCount.length === 0){
+      order.currentTokenNumber = 0
+    }else{
+      order.currentTokenNumber=recordCount[0].currentTokenNumber
+    }
     await order.save()
 
 
