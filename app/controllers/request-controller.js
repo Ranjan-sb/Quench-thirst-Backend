@@ -5,7 +5,6 @@ const Supplier = require('../models/supplier-model')
 const Order = require('../models/orders-model')
 const User = require('../models/user-model')
 const nodemailer = require('nodemailer')
-//const cron = require('node-cron');
 
 const requestController = {}
 
@@ -58,45 +57,6 @@ function startDeletionProcess() {
   // Schedule the next deletion after 30 minutes
   deletionTimeout = setTimeout(startDeletionProcess, 30 * 60 * 1000);
 }
-
-// Function to start the cron job for deleting requests after 30 minutes
-// function startCronJob() {
-//   cron.schedule('*/30 * * * *', async () => {
-//     try {
-//       const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
-//       const requestsToDelete = await Request.find({ $or: [{ supplierId: null }, { status: 'pending' }], createdAt: { $lte: thirtyMinutesAgo } });
-
-//       for (const request of requestsToDelete) {
-//         // Notify the customer that the request has been deleted
-//         const user = await User.findById(request.customerId);
-//         const transporter = nodemailer.createTransport({
-//           host: "smtp.gmail.com",
-//           port: 465,
-//           secure: true,
-//           auth: {
-//             user: process.env.SENDER_EMAIL,
-//             pass: process.env.EMAIL_PASSWORD,
-//           }
-//         });
-
-//         const html = `<p><b>Hi ${user.username},</b><br />Your request created at ${request.createdAt} which was of type : ${request.orderType} having ${request.quantity} of ${request.vehicleTypeId?.name} has been automatically deleted as no supplier accepted it within 30 minutes.</p>`;
-
-//         transporter.sendMail({
-//           from: process.env.SENDER_EMAIL, // sender email address
-//           to: user.email,
-//           subject: "Request Deleted", // Subject line
-//           html: html, // html body
-//         });
-
-//         // Delete the request from the database
-//         await Request.findByIdAndDelete(request._id);
-//       }
-//     } catch (error) {
-//       console.error('Error in cron job:', error);
-//     }
-//   });
-// }
-
 
 requestController.create = async (req, res) => {
   const errors = validationResult(req)
@@ -381,8 +341,3 @@ requestController.reject = async (req, res) => {
 
 module.exports = requestController
 
-
-// req.user.id 
-
-//GET  /api/requests/suppliers/my
-// Request.find({ 'suppliers.supplierId ': req.user.id })

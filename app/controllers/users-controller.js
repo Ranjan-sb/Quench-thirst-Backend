@@ -237,7 +237,7 @@ usersController.login = async (req, res) => {
         const {email,password} = _.pick(req.body, ['email','password'])
         const user = await User.findOne({ email : email })
         if (!user) {
-            return res.status(404).json({ error: 'User not present' })
+            return res.status(404).json({ errors: [{msg:'User not present',path:"User not defined"}] })
         }
         const checkPassword = await bcryptjs.compare(password,user.password)
         if(!checkPassword){
