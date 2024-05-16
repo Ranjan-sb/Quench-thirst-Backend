@@ -56,4 +56,34 @@ ordersController.setFulfilled = async(req,res)=>{
         console.log(error)
     }
 }
+
+ordersController.customerPreviousOrder = async(req,res)=>{
+    try{
+        const orders = await Order.find({customerId:req.user.id, status:"completed"}).populate('supplierId').populate('customerId').populate({
+            path: 'lineItems',
+            populate: {
+                path: 'vehicleTypeId',
+                model: 'VehicleType'
+            }
+        });
+        res.json(orders)
+    }catch(error){
+        console.log(error)
+    }
+}
+
+ordersController.supplierPreviousOrder = async(req,res)=>{
+    try{
+        const orders = await Order.find({supplierId:req.user.id, status:"completed"}).populate('supplierId').populate('customerId').populate({
+            path: 'lineItems',
+            populate: {
+                path: 'vehicleTypeId',
+                model: 'VehicleType'
+            }
+        });
+        res.json(orders)
+    }catch(error){
+        console.log(error)
+    }
+}
 module.exports = ordersController
