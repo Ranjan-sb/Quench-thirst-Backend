@@ -10,7 +10,7 @@ ordersController.listOrderSupplier = async(req,res)=>{
                 path: 'vehicleTypeId',
                 model: 'VehicleType'
             }
-        });
+        }).sort({createdAt:1});
         res.json(orders)
     } catch(error){
         console.log(error)
