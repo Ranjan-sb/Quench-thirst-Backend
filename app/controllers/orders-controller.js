@@ -4,7 +4,7 @@ const ordersController = {}
 
 ordersController.listOrderSupplier = async(req,res)=>{
     try{
-        const orders = await Order.find({supplierId:req.user.id}).populate('supplierId').populate('customerId').populate({
+        const orders = await Order.find({supplierId:req.user.id,status:"incomplete"}).populate('supplierId').populate('customerId').populate({
             path: 'lineItems',
             populate: {
                 path: 'vehicleTypeId',
@@ -20,7 +20,7 @@ ordersController.listOrderSupplier = async(req,res)=>{
 
 ordersController.listOrderCustomer = async(req,res)=>{
     try{
-        const orders = await Order.find({customerId:req.user.id}).populate('supplierId').populate('customerId').populate({
+        const orders = await Order.find({customerId:req.user.id,status:"incomplete"}).populate('supplierId').populate('customerId').populate({
             path: 'lineItems',
             populate: {
                 path: 'vehicleTypeId',
