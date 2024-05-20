@@ -3,15 +3,40 @@ const Order = require('../models/orders-model')
 const ordersController = {}
 
 ordersController.listOrderSupplier = async(req,res)=>{
+    let page = req.query.page || 1
+    let limit = req.query.limit || 10
+    const sortBy = req.query.sortBy || 'orderDate'
+    const order = req.query.order || 1
+    const sortQuery = {}
+    sortQuery[sortBy] = order === 'asc' ? 1 : -1
+    page = parseInt(page)
+    limit = parseInt(limit) 
     try{
-        const orders = await Order.find({supplierId:req.user.id,status:"incomplete"}).populate('supplierId').populate('customerId').populate({
-            path: 'lineItems',
-            populate: {
-                path: 'vehicleTypeId',
-                model: 'VehicleType'
-            }
-        }).sort({createdAt:1});
-        res.json(orders)
+        const totalCount = await Order.countDocuments({
+            supplierId:req.user.id
+          })
+      
+        const totalPages = Math.ceil(totalCount / limit)
+
+        const orders = await Order
+            .find({supplierId:req.user.id})
+            .populate('supplierId')
+            .populate('customerId')
+            .populate({
+                        path: 'lineItems',
+                        populate: {
+                            path: 'vehicleTypeId',
+                            model: 'VehicleType'
+                        }
+            })
+            // .sort(sortQuery)
+            .skip((page - 1) * limit)
+            .limit(limit);
+        res.json({
+            orders,
+            totalPages
+        })
+
     } catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})
