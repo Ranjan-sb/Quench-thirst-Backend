@@ -36,6 +36,7 @@ ordersController.listOrderSupplier = async(req,res)=>{
             orders,
             totalPages
         })
+
     } catch(error){
         console.log(error)
         res.status(500).json({error:"Internal Server Error"})
@@ -44,7 +45,7 @@ ordersController.listOrderSupplier = async(req,res)=>{
 
 ordersController.listOrderCustomer = async(req,res)=>{
     try{
-        const orders = await Order.find({customerId:req.user.id}).populate('supplierId').populate('customerId').populate({
+        const orders = await Order.find({customerId:req.user.id,status:"incomplete"}).populate('supplierId').populate('customerId').populate({
             path: 'lineItems',
             populate: {
                 path: 'vehicleTypeId',
@@ -77,6 +78,36 @@ ordersController.setFulfilled = async(req,res)=>{
         const orderUpdate = await Order.updateMany(searchQuery,{$set:{currentTokenNumber:order.tokenNumber}},{new:true})
         res.json(order)
     } catch(error){
+        console.log(error)
+    }
+}
+
+ordersController.customerPreviousOrder = async(req,res)=>{
+    try{
+        const orders = await Order.find({customerId:req.user.id, status:"completed"}).populate('supplierId').populate('customerId').populate({
+            path: 'lineItems',
+            populate: {
+                path: 'vehicleTypeId',
+                model: 'VehicleType'
+            }
+        });
+        res.json(orders)
+    }catch(error){
+        console.log(error)
+    }
+}
+
+ordersController.supplierPreviousOrder = async(req,res)=>{
+    try{
+        const orders = await Order.find({supplierId:req.user.id, status:"completed"}).populate('supplierId').populate('customerId').populate({
+            path: 'lineItems',
+            populate: {
+                path: 'vehicleTypeId',
+                model: 'VehicleType'
+            }
+        });
+        res.json(orders)
+    }catch(error){
         console.log(error)
     }
 }

@@ -142,6 +142,12 @@ app.get('/api/orders/supplier',authenticateUser,authorizeUser(['supplier']),orde
 //route to list orders of customer
 app.get('/api/orders/customer',authenticateUser,authorizeUser(['customer']),ordersController.listOrderCustomer)
 
+//route to list all previous orders of customer
+app.get('/api/prevOrders/customer',authenticateUser,authorizeUser(['customer']),ordersController.customerPreviousOrder)
+
+//route to list all previous orders of supplier
+app.get('/api/prevOrders/supplier',authenticateUser,authorizeUser(['supplier']),ordersController.supplierPreviousOrder)
+
 //route to set isFulfilled by Supplier
 app.put('/api/orders/:id/fulfilled',authenticateUser,authorizeUser(['supplier']),ordersController.setFulfilled)
 

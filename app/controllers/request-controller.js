@@ -161,7 +161,7 @@ requestController.list = async (req, res) => {
   const sortBy = req.query.sortBy || 'orderType'
   const order = req.query.order || 1
   let page = req.query.page || 1
-  let limit = req.query.limit || 10
+  let limit = req.query.limit || 2
   // console.log("search1-",orderTypeSearch)
   // console.log("search2-",purposeSearch)
   const sortQuery = {}
@@ -169,16 +169,15 @@ requestController.list = async (req, res) => {
   page = parseInt(page)
   limit = parseInt(limit)
   try {
-    const totalCount = await Request.countDocuments({
+    const totalCount = await Request.find({
+      status: 'pending',
       customerId: req.user.id,
       orderType: { $regex: orderTypeSearch, $options: 'i' },
       purpose: { $regex: purposeSearch, $options: 'i' }
-    })
-
-    const totalPages = Math.ceil(totalCount / limit)
-
+    }).countDocuments()
+    
     const requests = await Request
-      .find({
+    .find({
         customerId: req.user.id,
         status: 'pending',
         orderType: { $regex: orderTypeSearch, $options: 'i' },
@@ -188,14 +187,14 @@ requestController.list = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('vehicleTypeId', ['name']);
-    res.json(
-      {
-        requests:requests,
-        totalPages:totalPages
-      }
-    )
-    // console.log('request123', requests)
-    // res.json(requests)
+
+      const totalPages = Math.ceil(totalCount / limit)
+      res.json({
+          requests:requests,
+          totalPages:totalPages
+        })
+
+        // res.json(requests)
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "Internal Server Error" })
