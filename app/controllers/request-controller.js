@@ -188,14 +188,14 @@ requestController.list = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('vehicleTypeId', ['name']);
-    // res.json(
-    //   {
-    //     requests:requests,
-    //     totalPages:totalPages
-    //   }
-    // )
-
-    res.json(requests)
+    res.json(
+      {
+        requests:requests,
+        totalPages:totalPages
+      }
+    )
+    // console.log('request123', requests)
+    // res.json(requests)
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "Internal Server Error" })
@@ -286,11 +286,45 @@ requestController.accepted = async (req, res) => {
 }
 
 requestController.getRequestsOfSupplier = async (req, res) => {
+  const orderTypeSearch = req.query.orderTypeSearch || ''
+  const purposeSearch = req.query.purposeSearch || ''
+  const sortBy = req.query.sortBy || 'orderType'
+  const order = req.query.order || 1
+  let page = req.query.page || 1
+  let limit = req.query.limit || 10
+  // console.log("search1-",orderTypeSearch)
+  // console.log("search2-",purposeSearch)
+  const sortQuery = {}
+  sortQuery[sortBy] = order === 'asc' ? 1 : -1
+  page = parseInt(page)
+  limit = parseInt(limit)
   try {
-    const requests = await Request.find({ 'suppliers.supplierId': req.user.id, supplierId: null }).populate('vehicleTypeId', ['name']).populate('customerId', ['email'])
+    const totalCount = await Request.countDocuments({
+      'suppliers.supplierId': req.user.id,
+      supplierId: null,
+      orderType: { $regex: orderTypeSearch, $options: 'i' },
+      purpose: { $regex: purposeSearch, $options: 'i' }
+    })
+
+    const totalPages = Math.ceil(totalCount / limit)
+
+    const requests = await Request
+      .find({ 'suppliers.supplierId': req.user.id, 
+        supplierId: null,
+        orderType: { $regex: orderTypeSearch, $options: 'i' },
+        purpose: { $regex: purposeSearch, $options: 'i' } })
+      .sort(sortQuery)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .populate('vehicleTypeId', ['name'])
+      .populate('customerId', ['email'])
     //console.log(req.user.id)
     //console.log(requests)
-    res.json(requests)
+    console.log('suppliers_reqs-',{requests, totalPages})
+    res.json({
+      requests,
+      totalPages
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal Server Error' })
