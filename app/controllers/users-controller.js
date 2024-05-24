@@ -9,9 +9,9 @@ const { validationResult } = require('express-validator')
 const nodemailer = require('nodemailer')
 // const Supplier = require('../models/supplier-model')
 
-function reverseLatLon(arr) {
-    return [arr[1], arr[0]]
-  }
+// function reverseLatLon(arr) {
+//     return [arr[1], arr[0]]
+//   }
 
 const usersController = {}
 
